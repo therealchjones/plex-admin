@@ -8,7 +8,6 @@
 			name="viewport"
 			content="width=device-width, initial-scale=1, shrink-to-fit=no"
 		/>
-
 		<!-- Bootstrap CSS v5.2.1 -->
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css"
@@ -17,71 +16,172 @@
 			crossorigin="anonymous"
 		/>
 	</head>
-
 	<body>
 		<header>
-			<nav class="navbar navbar-expand-sm navbar-dark bg-primary">
-				<div class="container-fluid">
-					<h1 class="navbar-brand my-0 me-auto">Aleph 0 / Seedhost / Plex</h1>
-					<ul class="navbar-nav ms-auto" id="help">
-						<li class="nav-item">
-							<a class="nav-link" href="#">Help</a>
+			<nav class="navbar navbar-expand-lg navbar-dark bg-primary py-0">
+				<div class="container-fluid" role="tablist">
+					<h1 class="navbar-brand my-0">Aleph 0 / Seedhost / Plex</h1>
+					<!-- Nav tabs -->
+					<ul class="nav-tabs nav my-0 bg-light" role="tablist">
+						<li class="nav-item" role="presentation">
+							<button
+								class="nav-link active"
+								id="home-tab"
+								aria-current="page"
+								data-bs-toggle="tab"
+								data-bs-target="#home-content"
+								type="button"
+								role="tab"
+								aria-controls="home-content"
+								aria-selected="true"
+							>
+								Home
+							</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button
+								class="nav-link"
+								id="shows-tab"
+								aria-current="page"
+								data-bs-toggle="tab"
+								data-bs-target="#shows-content"
+								type="button"
+								role="tab"
+								aria-controls="shows-content"
+								aria-selected="false"
+							>
+								Shows
+							</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button
+								class="nav-link"
+								id="movies-tab"
+								data-bs-toggle="tab"
+								data-bs-target="#movies-content"
+								type="button"
+								role="tab"
+								aria-controls="movies-content"
+								aria-selected="false"
+							>
+								Movies
+							</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button
+								class="nav-link"
+								id="downloads-tab"
+								data-bs-toggle="tab"
+								data-bs-target="#downloads-content"
+								type="button"
+								role="tab"
+								aria-controls="downloads-content"
+								aria-selected="false"
+							>
+								Downloads
+							</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button
+								href="advanced-content"
+								class="nav-link"
+								id="advanced-tab"
+								data-bs-toggle="tab"
+								data-bs-target="#advanced-content"
+								type="button"
+								role="tab"
+								aria-controls="advanced-content"
+								aria-selected="false"
+							>
+								Advanced
+							</button>
 						</li>
 					</ul>
 				</div>
 			</nav>
 		</header>
 		<main>
-			<div class="container-fluid">
-				<p>
-					Any of the below may require logging into the Seedhost client area.
-					These will <em>not</em> ask for confirmation.
-				</p>
-			</div>
-			<div class="container-fluid">
-				<a
-					name=""
-					id=""
-					class="btn btn-primary"
-					href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=www"
-					role="button"
-					>Restart Webserver</a
+			<!-- Tab panes -->
+			<div class="tab-content container-fluid">
+				<div
+					class="tab-pane active"
+					id="home-content"
+					role="tabpanel"
+					aria-labelledby="home-tab"
 				>
-				<ul>
-					<li>
+					home
+				</div>
+				<div
+					class="tab-pane"
+					id="shows-content"
+					role="tabpanel"
+					aria-labelledby="shows-tab"
+				>
+					<p id="loading-shows">Loading shows</p>
+				</div>
+				<div
+					class="tab-pane"
+					id="movies-content"
+					role="tabpanel"
+					aria-labelledby="movies-tab"
+				>
+					<p id="loading-movies">Loading movies</p>
+				</div>
+				<div
+					class="tab-pane"
+					id="downloads-content"
+					role="tabpanel"
+					aria-labelledby="downloads-tab"
+				>
+					<p id="loading-downloads">Loading downloads</p>
+				</div>
+				<div
+					class="tab-pane"
+					id="advanced-content"
+					role="tabpanel"
+					aria-labelledby="advanced-tab"
+				>
+					<div class="container-fluid">
+						<p>
+							Any of the below may require logging into the Seedhost client
+							area. These will <em>not</em> ask for confirmation.
+						</p>
 						<a
+							name=""
+							id=""
+							class="btn btn-primary"
 							href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=www"
-							>restart webserver</a
+							role="button"
+							>Restart Webserver</a
 						>
-					</li>
-					<li>
-						<a
-							href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=upgradePlexDediServer#tab11"
-							>upgrade Plex</a
-						>
-					</li>
-					<li>remove old torrents</li>
-					<li>remove dead torrents</li>
-					<li>restart all programs</li>
-					<li>upgrade all programs</li>
-					<li>hard reboot server</li>
-				</ul>
-			</div>
-			<!-- Hover added -->
-			<div class="list-group">
-				<a href="#" class="list-group-item list-group-item-action active"
-					>Active item</a
-				>
-				<a href="#" class="list-group-item list-group-item-action">Item</a>
-				<a href="#" class="list-group-item list-group-item-action disabled"
-					>Disabled item</a
-				>
+						<ul>
+							<li>
+								<a
+									href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=www"
+									>restart webserver</a
+								>
+							</li>
+							<li>
+								<a
+									href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=upgradePlexDediServer#tab11"
+									>upgrade Plex</a
+								>
+							</li>
+							<li>remove old torrents</li>
+							<li>remove dead torrents</li>
+							<li>restart all programs</li>
+							<li>upgrade all programs</li>
+							<li>hard reboot server</li>
+						</ul>
+					</div>
+				</div>
 			</div>
 		</main>
 		<footer>
 			<!-- place footer here -->
 		</footer>
 		<!-- Bootstrap JavaScript Libraries -->
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 		<script
 			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
 			integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
@@ -93,5 +193,36 @@
 			integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz"
 			crossorigin="anonymous"
 		></script>
+		<script>
+			var loadShowsPromise,
+				loadMoviesPromise,
+				loadDownloadsPromise = null;
+			const apiAddress = "https://plex.aleph0.com/proxy.cgi";
+			$(document).ready(function () {
+				loadShowsPromise = loadShows();
+				loadMoviesPromise = loadMovies();
+				loadDownloadsPromise = loadDownloads();
+			});
+			async function loadShows() {}
+			async function loadMovies() {}
+			async function loadDownloads() {}
+			async function requestData(appName, apiPath, query) {
+				appName = encodeURIComponent(appName);
+				apiPath = encodeURIComponent(apiPath);
+				query = encodeURIComponent(query);
+				return fetch(
+					apiAddress +
+						"?appName=" +
+						appName +
+						"&apiPath=" +
+						apiPath +
+						"&query=" +
+						query,
+					{
+						credentials: "include",
+					}
+				);
+			}
+		</script>
 	</body>
 </html>
