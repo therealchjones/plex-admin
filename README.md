@@ -9,4 +9,16 @@ A system to manage a media center ecosystem
 1. Place index.html and proxy.cgi in appropriate filesystem areas to be served by the web server
 1. Ensure the permissions of proxy.cgi allow execution
 1. Place admin-secrets.sh in a directory _not_ accessible by the web server, but accessible to proxy.cgi
-1. Edit the files to include configurable information
+1. Edit the files to specify configurable information
+
+# Capabilities (To Do)
+
+- Recent and upcoming airings of each show and all shows
+- movie release dates
+- delete (from all apps)
+- mark as bad/failed, cancel, retry, search?
+- download status
+- (advanced) confirm shows/movies in multiple apps cross-referenced
+- (advanced?) child management of plex
+- add show or movie
+- (advanced) other in-app management stuff

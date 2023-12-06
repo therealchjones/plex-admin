@@ -1,0 +1,12 @@
+#title-bar { height: 2.5em;}
+#tab-content {
+	position:fixed; top:2.5em; left:0; right: 0; bottom: 5em;
+}
+#footer-bar {
+	height: 5em;
+}
+#footer-bar button {
+	height: 5em;
+	min-width: 20%;
+}
+#footer-bar .button-label { margin:0;}

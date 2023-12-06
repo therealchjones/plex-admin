@@ -1,11 +1,22 @@
 #!/bin/sh
 
+# outputs a JSON-formatted object:
+# {
+#	"response": <response output from proxied app, usually "" if there is an error>,
+#	"debug": <dictionary of environment variables>,
+#	"error": <error output from proxied app, "" if no error>
+# }
+# The "debug" property is present iff the request includes the "debug" param (with any or no value)
+# In case of an error the "response" property value may be empty, may be JSON output, or may
+# be non-JSON output; it's what is given on STDOUT when the proxied app experiences the error
+
 set -e
 set -u
 
 PROXY_DEBUG="${PROXY_DEBUG:-}"
 SECRETS_FILE=/home/chjones/.config/plex-admin/admin-secrets.sh
-CURL="/usr/bin/curl"
+PROXY_CURL="/usr/bin/curl"
+PROXY_TARGET=
 PROXY_ERROR=
 QUERY_STRING="${QUERY_STRING:-}"
 
@@ -24,31 +35,34 @@ call_api() { # call_api appname apipath query
 	if [ -z "$2" ]; then
 		PROXY_ERROR="call_api requires an api path"
 	fi
-	path="$2"
 	case "$1" in
 		"radarr")
 			host="$RADARR_API_HOST"
 			port="$RADARR_API_PORT"
 			key="$RADARR_API_KEY"
+			path="$RADARR_API_PATH$2"
 			;;
 		"sonarr")
 			host="$SONARR_API_HOST"
 			port="$SONARR_API_PORT"
 			key="$SONARR_API_KEY"
+			path="$SONARR_API_PATH$2"
 			;;
 		"plex")
 			host="$PLEX_API_HOST"
 			port="$PLEX_API_PORT"
 			key="$PLEX_API_KEY"
+			path="$PLEX_API_PATH$2"
 			;;
 		*)
 			PROXY_ERROR="Unknown service '$2'; call_api requires appname 'radarr', 'sonarr', or 'plex'."
 			return 1
 			;;
 	esac
-	# captures any stderr from curl in ERROR_RESPONSE but still sends stdout from curl to stdout
-	if ! ERROR_RESPONSE="$("$CURL" -s -i "http://$host:$port$path?apiKey=$key&$3" 3>&2 2>&1 1>&3)" 3>&1; then
-		PROXY_ERROR="curl error: $ERROR_RESPONSE"
+	# captures any stderr from curl in PROXY_ERROR_RESPONSE but still sends stdout from curl to stdout
+	PROXY_TARGET="http://$host:$port$path?apiKey=$key$3"
+	if ! { PROXY_ERROR_RESPONSE="$("${PROXY_CURL}" -Ss "$PROXY_TARGET" 3>&2 2>&1 1>&3)"; } 2>&1; then
+		PROXY_ERROR="curl error: $PROXY_ERROR_RESPONSE"
 		return 1
 	fi
 }
@@ -70,6 +84,12 @@ print_debug() {
 	echo "\"\$0\": \"$0\" }"
 }
 
+exit_with_error() {
+	# FD 2 will print to apache error.log (not the cgi.log) but receives no further formatting; we
+	# try to make it look more like other error.log output here
+	echo "[$(date +"%a %b %H:%M:%S.%N %Y")] -/- [cgid:error] [${PPID:-"-"}/-] $0: exit 1: $PROXY_ERROR" >&2
+	exit 1
+}
 # process the query string
 PROXY_APPNAME=
 PROXY_APIPATH=
@@ -85,9 +105,7 @@ while [ -n "$QUERY_STRING" ]; do
 		param_name="${param%%=*}"
 		if [ "$param_name" != "$param" ]; then # there's a value
 			param_val="${param#"$param_name"=}"
-			if [ "$param_val" -ne "${param_val#*%}" ]; then
-				param_val="$(/usr/binphp -r "echo urldecode('$1')")"
-			fi
+			param_val="$(/usr/bin/php -r "echo urldecode('$param_val');")"
 		fi
 		case "$param_name" in
 			"appName")
@@ -117,26 +135,35 @@ done
 if [ -z "$PROXY_APPNAME" ] || [ -z "$PROXY_APIPATH" ]; then
 	PROXY_ERROR="Both appName and apiPath are required."
 fi
-
 # output content
+# should sanitize/json-escape PROXY_ERROR
 echo "Content-type: application/json"
 echo
+# We always package the proxied data, for consistency in case there's
+# debug data or an error.
+echo "{"
+# We check PROXY_ERROR twice since we don't want to run call_api
+# if it's already errored out
 if [ -n "$PROXY_ERROR" ]; then
-	echo "{ \"error\": \"$PROXY_ERROR\" "
+	echo "\"error\": \"$PROXY_ERROR\""
 	if [ -n "$PROXY_DEBUG" ]; then
 		echo ", \"debug\": "
 		print_debug
 	fi
 	echo "}"
-	exit
+	exit_with_error
 fi
-if [ -n "$PROXY_DEBUG" ]; then
-	echo "{ \"debug\": "
-	print_debug
-	echo ", \"response\": "
-fi
+echo "\"response\": "
 call_api "$PROXY_APPNAME" "$PROXY_APIPATH" "$PROXY_QUERY" \
-	|| echo "{ \"error\": \"$PROXY_ERROR\" }"
+	|| {
+		echo "\"\","
+		echo "\"error\": \"$PROXY_ERROR\""
+	}
 if [ -n "$PROXY_DEBUG" ]; then
-	echo "}"
+	echo ", \"debug\": "
+	print_debug
+fi
+echo "}"
+if [ -n "$PROXY_ERROR" ]; then
+	exit_with_error
 fi
