@@ -10,3 +10,6 @@
 	min-width: 20%;
 }
 #footer-bar .button-label { margin:0;}
+.list-group { padding-left: 2rem; }
+.list-group-item { align-items: center; height:4em;}
+.item-years, .item-airings { font-size:smaller; }

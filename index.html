@@ -176,14 +176,16 @@
 		</header>
 		<main>
 			<!-- Tab panes -->
-			<div id="tab-content" class="tab-content container-fluid">
+			<div id="tab-content" class="tab-content container-fluid overflow-auto">
 				<div
 					class="tab-pane active show"
 					id="help-content"
 					role="tabpanel"
 					aria-labelledby="help-tab"
 				>
-					<p>help</p>
+					<div class="container d-block text-center">
+						<p>help</p>
+					</div>
 				</div>
 				<div
 					class="tab-pane"
@@ -191,19 +193,25 @@
 					role="tabpanel"
 					aria-labelledby="shows-tab"
 				>
-					<p class="container d-block" id="loading-shows">Loading shows</p>
+					<div class="container d-block text-center" id="loading-shows">
+						<p>Loading shows...</p>
+						<div class="spinner-border" role="status" aria-hidden="true"></div>
+					</div>
 					<ul
 						id="shows-list"
-						class="d-none container list-group list-group-flush border-bottom scrollarea"
+						class="d-none container list-group list-group-flush"
 					></ul>
 				</div>
 				<div
-					class="tab-pane"
+					class="tab-pane overflow-auto"
 					id="movies-content"
 					role="tabpanel"
 					aria-labelledby="movies-tab"
 				>
-					<p id="loading-movies">Loading movies</p>
+					<div class="container d-block text-center" id="loading-movies">
+						<p>Loading movies...</p>
+						<div class="spinner-border" role="status" aria-hidden="true"></div>
+					</div>
 					<button
 						type="button"
 						class="btn btn-primary"
@@ -216,8 +224,13 @@
 						Available movies
 					</button>
 					<button type="button" class="btn btn-primary">Wanted movies</button>
-					<div class="container visually-hidden" id="current-movies"></div>
-					<div class="container visually-hidden" id="wanted-movies"></div>
+					<div class="container d-none overflow-auto" id="current-movies">
+						<ul
+							id="movies-list"
+							class="container list-group list-group-flush"
+						></ul>
+					</div>
+					<div class="container d-none" id="wanted-movies"></div>
 				</div>
 				<div
 					class="tab-pane"
@@ -225,7 +238,10 @@
 					role="tabpanel"
 					aria-labelledby="downloads-tab"
 				>
-					<p id="loading-downloads">Loading downloads</p>
+					<div class="container d-block text-center" id="loading-downloads">
+						<p>Loading downloads...</p>
+						<div class="spinner-border" role="status" aria-hidden="true"></div>
+					</div>
 				</div>
 				<div
 					class="tab-pane"
@@ -236,21 +252,20 @@
 					<div class="container-fluid">
 						<p>
 							Any of the below may require logging into the Seedhost client
-							area. These will <em>not</em> ask for confirmation.
+							area. These will <em>not</em> ask for confirmation. Results (or a
+							login request) will open in the Seedhost client area in a new
+							window.
 						</p>
-						<a
-							name=""
-							id=""
-							class="btn btn-primary"
-							href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=www"
-							role="button"
-							>Restart Webserver</a
-						>
-						<ul>
+
+						<ul class="list-group">
 							<li>
 								<a
+									name="restart-webserver"
+									id="restart-webserver-button"
+									class="btn btn-primary"
 									href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=www"
-									>restart webserver</a
+									role="button"
+									>Restart Webserver</a
 								>
 							</li>
 							<li>

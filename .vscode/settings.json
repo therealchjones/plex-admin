@@ -1,0 +1,5 @@
+{
+	"livePreview.autoRefreshPreview": "On Changes to Saved Files",
+	"livePreview.debugOnExternalPreview": false,
+	"livePreview.tasks.runTaskWithExternalPreview": false
+}

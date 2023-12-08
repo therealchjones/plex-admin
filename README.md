@@ -22,3 +22,9 @@ A system to manage a media center ecosystem
 - (advanced?) child management of plex
 - add show or movie
 - (advanced) other in-app management stuff
+
+# Development Notes
+
+- Comments are important and plentiful. Read them.
+- If testing on a local machine while the API proxy is on a remote server and requires authentication,
+  you may need to allow "third-party cookies" in your browser to access the scripts (in addition to properly setting up the remote server)

@@ -115,7 +115,7 @@ while [ -n "$QUERY_STRING" ]; do
 				PROXY_APIPATH="$param_val"
 				;;
 			"query")
-				PROXY_QUERY="$param_val"
+				PROXY_QUERY="&$param_val"
 				;;
 			"debug")
 				if [ -z "$param_val" ]; then
