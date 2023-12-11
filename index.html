@@ -29,7 +29,7 @@
 				id="title-bar"
 				class="navbar justify-content-center fixed-top navbar-dark bg-primary py-0"
 			>
-				<h1 class="navbar-brand my-0">Aleph 0 / Seedhost / Plex</h1>
+				<h1 class="navbar-brand my-0">Aleph 0 / Seedhost / Plex Admin</h1>
 			</div>
 			<nav
 				id="footer-bar"
@@ -38,6 +38,20 @@
 			>
 				<!-- Nav tabs -->
 				<ul class="container nav navbar-nav nav-justified" role="tablist">
+					<li class="nav-item" role="presentation">
+						<button
+							class="nav-link justify-content-center active"
+							id="home-tab"
+							data-bs-toggle="tab"
+							data-bs-target="#home-content"
+							type="button"
+							role="tab"
+							aria-controls="home-content"
+							aria-selected="false"
+						>
+							<p class="button-label">Home</p>
+						</button>
+					</li>
 					<li class="nav-item" role="presentation">
 						<button
 							class="nav-link justify-content-center"
@@ -176,15 +190,24 @@
 		</header>
 		<main>
 			<!-- Tab panes -->
+			<noscript class="container alert-danger">
+				<h2>JavaScript is required</h2>
+				<p>
+					Either your browser does not support JavaScript or it is disabled. ASP
+					Admin makes extensive use of JavaScript for its functionality. Please
+					use a browser with JavaScript available and enabled to access ASP
+					Admin.
+				</p>
+			</noscript>
 			<div id="tab-content" class="tab-content container-fluid overflow-auto">
 				<div
 					class="tab-pane active show"
-					id="help-content"
+					id="home-content"
 					role="tabpanel"
-					aria-labelledby="help-tab"
+					aria-labelledby="home-tab"
 				>
 					<div class="container d-block text-center">
-						<p>help</p>
+						<p>home</p>
 					</div>
 				</div>
 				<div

@@ -1,6 +1,7 @@
 "use strict";
 
-const apiAddress = "https://plex.aleph0.com/chjones/admin/proxy.cgi";
+const siteAddress = "https://plex.aleph0.com";
+const apiAddress = `${siteAddress}/chjones/admin/proxy.cgi`;
 const debugMode = true;
 const dbs = {
 	shows: null,
@@ -54,7 +55,7 @@ async function requestData(appName, apiPath, query = "") {
 /**
  * Processes the response from a Fetch API request
  * @param {Response} response Response from a Fetch API request
- * @returns {Promise<object>} A Promise to proces the response that resolves with an object representing the response
+ * @returns {Promise<object>} A Promise to process the response that resolves with an object representing the response
  */
 async function processResponse(response) {
 	if (!response.ok) {
@@ -92,7 +93,6 @@ async function processResponse(response) {
 		console.error("Response object: " + json);
 		throw new Error("Invalid response from; see console for more info.");
 	}
-	json.response.sort(arrSort);
 	return { json: json, response: response, time: Date.now() };
 }
 /**
@@ -123,6 +123,10 @@ async function loadDb(dbName) {
 	}
 	return requestData(appName, apiPath, query)
 		.then(processResponse)
+		.then((response) => {
+			response.json.response.sort(arrSort);
+			return response;
+		})
 		.then((db) => (dbs[dbName] = db));
 }
 /**
@@ -297,11 +301,94 @@ function getDateString(date) {
 		});
 	}
 }
-
+/**
+ *
+ * @param {Number} seriesId The sonarr series id of the show
+ * @param {Date} airDate The date the requested episode aired
+ * @returns A Promise for a boolean value reporting if all episodes of the given show from the given date are owned
+ */
 async function checkEpisode(seriesId, airDate) {
 	// check if all episodes are downloaded
 	// download episodes
 	// save episodes in database
 	// look for given airdate
+	return requestData(
+		"sonarr",
+		"/api/v3/calendar",
+		`start=${airDate.toJSON()}&end=${airDate.toJSON()}`
+	)
+		.then(processResponse)
+		.then((response) => {
+			response.json.response.forEach((episode) => {
+				if (episode.seriesId === seriesId && !episode.hasFile) return false;
+			});
+			return true;
+		});
+}
+
+async function checkAuth() {
+	if (!(await hasAuth())) {
+		let warning = document.createElement("div");
+		warning.innerHTML =
+			"<h1>Not Authorized<span class='visually hidden'>: </p></h1>";
+		if (
+			window.location.origin === "https://plex.aleph0.com" ||
+			window.location.origin === "https://plex.aleph0.com:443"
+		) {
+			warning.innerHTML += `<p>The origin (${window.location.origin}) is correct, `;
+			warning.innerHTML +=
+				"So your authorization probably just needs to be refreshed. ";
+			warning.innerHTML +=
+				'Try refreshing the page or returning to <a href="https://plex.aleph0.com">https://plex.aleph0.com</a>.</p>';
+		} else {
+			warning.innerHTML += `<p>The origin (${window.location.origin}) is not 'https://plex.aleph0.com/. `;
+			if (window.location.origin === "http://127.0.0.1:3000") {
+				warning.innerHTML +=
+					"Even though the web application allows them for testing from 127.0.01:3000, ";
+				warning.innerHTML +=
+					"this browser may be refusing third-party cookies, or your authorization may need to be refreshed. </p>";
+				warning.innerHTML +=
+					"<p>Try refreshing the page or visiting <a href='https://plex.aleph0.com/'>https://plex.aleph0.com</a> before returning here, ";
+				warning.innerHTML +=
+					"and consider allowing third-party cookies in your browser.</p>";
+			} else {
+				warning.innerHTML +=
+					'You probably need to directly visit <a href="https://plex.aleph0.com">https://plex.aleph0.com</a>.</p>';
+			}
+		}
+		console.warn(warning.innerText);
+		return false;
+	}
 	return true;
+}
+async function hasAuth() {
+	let response = await requestData("sonarr", "/ping");
+	if (!response.ok) {
+		if (debugMode) {
+			console.debug(`Response code ${response.status}`);
+			console.debug("Full response: ");
+			console.debug(response);
+		}
+		console.warn("The app is not authorized.");
+		return false;
+	}
+	try {
+		let text = await response.text();
+		if (debugMode) {
+			console.debug("Response:");
+			console.debug(text);
+		}
+		let json = JSON.parse(text);
+		if (
+			json.response &&
+			json.response.status &&
+			json.response.status === "OK"
+		) {
+			if (debugMode) console.debug("Response OK");
+			return true;
+		} else throw new Error("Unable to access API.");
+	} catch (error) {
+		console.warn(error);
+		return false;
+	}
 }

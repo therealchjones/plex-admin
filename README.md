@@ -11,9 +11,14 @@ A system to manage a media center ecosystem
 1. Place admin-secrets.sh in a directory _not_ accessible by the web server, but accessible to proxy.cgi
 1. Edit the files to specify configurable information
 
-# Capabilities (To Do)
+# Capabilities
 
-- Recent and upcoming airings of each show and all shows
+- When was the most recent episode, and do we have it?
+- When is the next episode?
+
+# To Do
+
+- Recent and upcoming airings of all shows (calendar style)
 - movie release dates
 - delete (from all apps)
 - mark as bad/failed, cancel, retry, search?
