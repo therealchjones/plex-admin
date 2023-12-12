@@ -14,6 +14,8 @@ const processes = {
 	downloads: null,
 };
 
+addDynamicContent();
+enableFooter();
 loadShows();
 loadMovies();
 // loadDownloads();
@@ -181,7 +183,7 @@ async function loadShows() {
 
 						entry += `
 						<div class="item-previous-airing p-0">Newest: ${getDateString(previousAiring)}
-						<span class="pending spinner-grow d-inline-block text-warning" style="height:0.5em;width:0.5em;margin-bottom:0.25em;"></span>
+						<span class="pending spinner-grow d-inline-block text-warning"></span>
 						<span class="confirmed d-none text-success"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-check confirmed" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg></span>
 						<span class="disconfirmed d-none text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/></svg></span></div>`;
 						// identify if we already have this episode and update list and db
@@ -390,5 +392,132 @@ async function hasAuth() {
 	} catch (error) {
 		console.warn(error);
 		return false;
+	}
+}
+function addDynamicContent() {
+	let content = `
+				<div
+					class="tab-pane active show"
+					id="home-content"
+					role="tabpanel"
+					aria-labelledby="home-tab"
+				>
+					<div class="container d-block text-center">
+						<p>home</p>
+					</div>
+				</div>
+				<div
+					class="tab-pane"
+					id="shows-content"
+					role="tabpanel"
+					aria-labelledby="shows-tab"
+				>
+					<div class="container d-block text-center" id="loading-shows">
+						<p>Loading shows...</p>
+						<div class="spinner-border" role="status" aria-hidden="true"></div>
+					</div>
+					<ul
+						id="shows-list"
+						class="d-none container list-group list-group-flush"
+					></ul>
+				</div>
+				<div
+					class="tab-pane"
+					id="movies-content"
+					role="tabpanel"
+					aria-labelledby="movies-tab"
+				>
+					<div class="container d-block text-center" id="loading-movies">
+						<p>Loading movies...</p>
+						<div class="spinner-border" role="status" aria-hidden="true"></div>
+					</div>
+					<button
+						type="button"
+						class="btn btn-primary"
+						id="button-movie-calendar"
+						onclick="getMovieCalendar();"
+					>
+						Get Movie Calendar
+					</button>
+					<button type="button" class="btn btn-primary">
+						Available movies
+					</button>
+					<button type="button" class="btn btn-primary">Wanted movies</button>
+					<div class="container d-none overflow-auto" id="current-movies">
+						<ul
+							id="movies-list"
+							class="container list-group list-group-flush"
+						></ul>
+					</div>
+					<div class="container d-none" id="wanted-movies"></div>
+				</div>
+				<div
+					class="tab-pane"
+					id="downloads-content"
+					role="tabpanel"
+					aria-labelledby="downloads-tab"
+				>
+					<div class="container d-block text-center" id="loading-downloads">
+						<p>Loading downloads...</p>
+						<div class="spinner-border" role="status" aria-hidden="true"></div>
+					</div>
+				</div>
+				<div
+					class="tab-pane"
+					id="advanced-content"
+					role="tabpanel"
+					aria-labelledby="advanced-tab"
+				>
+					<div class="container-fluid">
+						<p>
+							Any of the below may require logging into the Seedhost client
+							area. These will <em>not</em> ask for confirmation. Results (or a
+							login request) will open in the Seedhost client area in a new
+							window.
+						</p>
+
+						<ul class="list-group">
+							<li>
+								<a
+									name="restart-webserver"
+									id="restart-webserver-button"
+									class="btn btn-primary"
+									href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=www"
+									role="button"
+									>Restart Webserver</a
+								>
+							</li>
+							<li>
+								<a
+									href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=upgradePlexDediServer#tab11"
+									>upgrade Plex</a
+								>
+							</li>
+							<li>remove old torrents</li>
+							<li>remove dead torrents</li>
+							<li>restart all programs</li>
+							<li>upgrade all programs</li>
+							<li>hard reboot server</li>
+						</ul>
+					</div>
+				</div>
+`;
+	let dynamicContent = document.createElement("div");
+	dynamicContent.classList.add(
+		"tab-content",
+		"`container-fluid",
+		"overflow-auto"
+	);
+	dynamicContent.id = "tab-content";
+	dynamicContent.innerHTML = content;
+	document.getElementsByTagName("main")[0].appendChild(dynamicContent);
+}
+function enableFooter() {
+	let buttons = document
+		.getElementById("footer-bar")
+		.getElementsByClassName("nav-link");
+	for (let index = 0; index < buttons.length; index++) {
+		const element = buttons[index];
+		element.removeAttribute("disabled");
 	}
 }

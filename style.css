@@ -1,5 +1,5 @@
 #title-bar { height: 2.5em;}
-#tab-content {
+main {
 	position:fixed; top:2.5em; left:0; right: 0; bottom: 5em;
 }
 #footer-bar {
@@ -13,3 +13,6 @@
 .list-group { padding-left: 2rem; }
 .list-group-item { align-items: center; height:4em;}
 .item-years, .item-airings { font-size:smaller; }
+.pending.spinner-grow {height: 0.5em;
+	width: 0.5em;
+	margin-bottom: 0.25em;}
