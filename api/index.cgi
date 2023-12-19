@@ -137,6 +137,7 @@ done
 if [ -z "$PROXY_APPNAME" ] || [ -z "$PROXY_APIPATH" ]; then
 	PROXY_ERROR="Both appName and apiPath are required."
 fi
+check_secrets
 # output content
 # should sanitize/json-escape PROXY_ERROR
 echo "Content-type: application/json"
