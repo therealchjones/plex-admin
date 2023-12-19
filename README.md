@@ -1,8 +1,17 @@
 # plex-admin
 
-A system to manage a media center ecosystem
+a system to centrally manage a media center ecosystem
+
+## Capabilities
+
+- When was the most recent episode, and do we have it?
+- When is the next episode?
 
 ## Installation
+
+### via git repository
+
+### via release package
 
 1. Enable the web server authorization and authentication method of your choice
 1. Configure the web server to run proxy.cgi as a cgi script rather than serve the file
@@ -13,8 +22,9 @@ A system to manage a media center ecosystem
 
 ## Capabilities
 
-- When was the most recent episode, and do we have it?
-- When is the next episode?
+- Comments are important and plentiful. Read them.
+- If testing on a local machine while the API proxy is on a remote server and requires authentication,
+  you may need to allow "third-party cookies" in your browser to access the scripts (in addition to properly setting up the remote server)
 
 ## To Do
 
