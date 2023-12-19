@@ -1,7 +1,7 @@
 "use strict";
 
 const siteAddress = "https://plex.aleph0.com";
-const apiAddress = `${siteAddress}/chjones/admin/proxy.cgi`;
+const apiAddress = `${siteAddress}/chjones/admin/api/index.cgi`;
 const debugMode = true;
 const dbs = {
 	shows: null,
@@ -14,17 +14,18 @@ const processes = {
 	downloads: null,
 };
 
-addDynamicContent();
-enableFooter();
-loadShows();
-loadMovies();
-// loadDownloads();
+Promise.all([addDynamicContent(), hasAuth()]).then(
+	([dynamicContent, loggedIn]) => {
+		if (debugMode) console.debug("displaying dynamic content");
+		let loadingContent = document.getElementById("loading-content");
+		loadingContent.classList.remove("d-flex");
+		loadingContent.classList.add("d-none");
+		dynamicContent.classList.remove("d-none");
+		return setLogin(loggedIn);
+	}
+);
 
-// proxied response is of the form {
-//   response: responseobject("" or possibly other if there is an error),
-//   error: errorstring (or "" if no error),
-//   debug: debugobject (property only present if "debug" parameter in request)
-// }
+// loadDownloads();
 
 /**
  * Builds and submits a Fetch request for data. Parameters used will be URI-encoded by requestData
@@ -51,6 +52,8 @@ async function requestData(appName, apiPath, query = "") {
 	}
 	return fetch(uri, {
 		credentials: "include",
+	}).catch((reason) => {
+		console.log(`Rejected. ${reason}`);
 	});
 }
 
@@ -364,14 +367,19 @@ async function checkAuth() {
 	return true;
 }
 async function hasAuth() {
+	if (debugMode) {
+		console.debug(
+			"Attempting to request a secure resource to check authorization. A forthcoming 401 error is not unexpected and will be handled if necessary."
+		);
+	}
 	let response = await requestData("sonarr", "/ping");
 	if (!response.ok) {
 		if (debugMode) {
 			console.debug(`Response code ${response.status}`);
 			console.debug("Full response: ");
 			console.debug(response);
+			console.debug("The app is not authorized.");
 		}
-		console.warn("The app is not authorized.");
 		return false;
 	}
 	try {
@@ -394,7 +402,8 @@ async function hasAuth() {
 		return false;
 	}
 }
-function addDynamicContent() {
+async function addDynamicContent() {
+	if (debugMode) console.debug("Adding main content");
 	let content = `
 				<div
 					class="tab-pane active show"
@@ -402,8 +411,15 @@ function addDynamicContent() {
 					role="tabpanel"
 					aria-labelledby="home-tab"
 				>
-					<div class="container d-block text-center">
-						<p>home</p>
+					<div id="login-message" class="container text-center d-none">
+						<h2>
+						  Access to this app requires an Aleph 0 account.
+						</h2>
+						<p>
+							<a href="/oauth/login?return=${encodeURI(
+								document.location.href
+							)}">Sign in via Google</a>
+						</p>
 					</div>
 				</div>
 				<div
@@ -414,7 +430,7 @@ function addDynamicContent() {
 				>
 					<div class="container d-block text-center" id="loading-shows">
 						<p>Loading shows...</p>
-						<div class="spinner-border" role="status" aria-hidden="true"></div>
+						<div class="spinner-grow" role="status" aria-hidden="true"></div>
 					</div>
 					<ul
 						id="shows-list"
@@ -429,13 +445,12 @@ function addDynamicContent() {
 				>
 					<div class="container d-block text-center" id="loading-movies">
 						<p>Loading movies...</p>
-						<div class="spinner-border" role="status" aria-hidden="true"></div>
+						<div class="spinner-grow" role="status" aria-hidden="true"></div>
 					</div>
 					<button
 						type="button"
 						class="btn btn-primary"
 						id="button-movie-calendar"
-						onclick="getMovieCalendar();"
 					>
 						Get Movie Calendar
 					</button>
@@ -459,7 +474,7 @@ function addDynamicContent() {
 				>
 					<div class="container d-block text-center" id="loading-downloads">
 						<p>Loading downloads...</p>
-						<div class="spinner-border" role="status" aria-hidden="true"></div>
+						<div class="spinner-grow" role="status" aria-hidden="true"></div>
 					</div>
 				</div>
 				<div
@@ -503,14 +518,18 @@ function addDynamicContent() {
 				</div>
 `;
 	let dynamicContent = document.createElement("div");
-	dynamicContent.classList.add(
-		"tab-content",
-		"`container-fluid",
-		"overflow-auto"
-	);
+	dynamicContent.classList.add("tab-content", "container-fluid", "d-none");
 	dynamicContent.id = "tab-content";
-	dynamicContent.innerHTML = content;
-	document.getElementsByTagName("main")[0].appendChild(dynamicContent);
+	if (debugMode) console.debug(content);
+	let newElement = document
+		.getElementsByTagName("main")[0]
+		.appendChild(dynamicContent);
+	newElement.innerHTML = content;
+	if (debugMode) {
+		console.debug("Main content added:");
+		console.debug(newElement);
+	}
+	return dynamicContent;
 }
 function enableFooter() {
 	let buttons = document
@@ -519,5 +538,19 @@ function enableFooter() {
 	for (let index = 0; index < buttons.length; index++) {
 		const element = buttons[index];
 		element.removeAttribute("disabled");
+	}
+}
+async function setLogin(loggedIn) {
+	if (loggedIn) {
+		enableFooter();
+		return Promise.all(loadShows(), loadMovies())
+			.then(() => true)
+			.catch((reason) => {
+				throw new Error(`Unable to load remote content. Reason: ${reason}`);
+			});
+	} else {
+		let login = document.getElementById("login-message");
+		login.classList.remove("d-none");
+		return false;
 	}
 }

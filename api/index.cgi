@@ -20,12 +20,14 @@ PROXY_TARGET=
 PROXY_ERROR=
 QUERY_STRING="${QUERY_STRING:-}"
 
-if [ -r "$SECRETS_FILE" ]; then
-	# shellcheck source=./admin-secrets.sh # during development
-	. "$SECRETS_FILE"
-else
-	PROXY_ERROR="secrets file '$SECRETS_FILE' not found"
-fi
+check_secrets() { # ensure the needed secrets file exists
+	if [ -r "$SECRETS_FILE" ]; then
+		# shellcheck source=../admin-secrets.sh # during development
+		. "$SECRETS_FILE"
+	else
+		PROXY_ERROR="secrets file '$SECRETS_FILE' not found"
+	fi
+}
 
 call_api() { # call_api appname apipath query
 	if [ "$#" -ne 3 ]; then
@@ -135,6 +137,7 @@ done
 if [ -z "$PROXY_APPNAME" ] || [ -z "$PROXY_APIPATH" ]; then
 	PROXY_ERROR="Both appName and apiPath are required."
 fi
+check_secrets
 # output content
 # should sanitize/json-escape PROXY_ERROR
 echo "Content-type: application/json"

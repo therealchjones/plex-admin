@@ -2,12 +2,12 @@
 
 # shellcheck disable=SC2034  # This file is sourced externally
 
-# configuration variables including "secrets" like local API keys
-# these should not need to be exported for other programs if this
-# file is appropriately sourced by the proxy.cgi script which will
-# then use the variables in commands
+# This file contains "secrets" and should not be publicly accessible.
+# The recommended file mode is 0600 in a directory with mode 0700,
+# not in a hierarchy to be served to external sources. Use a properly
+# secured CGI or similar script to obtain and use data from this file.
 
-API_HOST=127.0.0.1
+API_HOST="127.0.0.1"
 SONARR_API_HOST="$API_HOST"
 RADARR_API_HOST="$API_HOST"
 PLEX_API_HOST="$API_HOST"
