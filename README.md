@@ -25,15 +25,3 @@ a system to centrally manage a media center ecosystem
 - Comments are important and plentiful. Read them.
 - If testing on a local machine while the API proxy is on a remote server and requires authentication,
   you may need to allow "third-party cookies" in your browser to access the scripts (in addition to properly setting up the remote server)
-
-### To Do
-
-- Recent and upcoming airings of all shows (calendar style)
-- movie release dates
-- delete (from all apps)
-- mark as bad/failed, cancel, retry, search?
-- download status
-- (advanced) confirm shows/movies in multiple apps cross-referenced
-- (advanced?) child management of plex
-- add show or movie
-- (advanced) other in-app management stuff
