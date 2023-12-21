@@ -430,6 +430,14 @@ async function addDynamicContent() {
 				console.debug(newContent);
 			}
 			return newContent;
+		})
+		.then((newContent) => {
+			for (const element of document
+				.getElementById("footer-bar")
+				.getElementsByClassName("nav-link")) {
+				element.removeAttribute("disabled");
+			}
+			return newContent;
 		});
 }
 function enableFooter() {
@@ -438,7 +446,9 @@ function enableFooter() {
 		.getElementsByClassName("nav-link");
 	for (let index = 0; index < buttons.length; index++) {
 		const element = buttons[index];
-		element.removeAttribute("disabled");
+		const elementName = element.id.replace(/-.*$/, "");
+		element.setAttribute("aria-controls", `${elementName}-content`);
+		element.setAttribute("data-bs-target", `#${elementName}-content`);
 	}
 }
 async function setLogin(loggedIn) {
