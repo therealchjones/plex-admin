@@ -454,13 +454,16 @@ function enableFooter() {
 async function setLogin(loggedIn) {
 	if (loggedIn) {
 		enableFooter();
-		return Promise.all(loadShows(), loadMovies())
+		return Promise.all([loadShows(), loadMovies()])
 			.then(() => true)
 			.catch((reason) => {
 				throw new Error(`Unable to load remote content. Reason: ${reason}`);
 			});
 	} else {
 		let login = document.getElementById("login-message");
+		login.getElementsByTagName("a")[0].href += `?return=${encodeURI(
+			document.location.href
+		)}`;
 		login.classList.remove("d-none");
 		return false;
 	}
