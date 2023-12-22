@@ -1,18 +1,53 @@
-#title-bar { height: 2.5em;}
+#title-bar {
+	height: 2.5rem;
+}
+
 main {
-	position:fixed; top:2.5em; left:0; right: 0; bottom: 5em;
+	position: fixed;
+	top: 2.5rem;
+	left: 0;
+	right: 0;
+	bottom: 5em;
 }
+
 #footer-bar {
-	height: 5em;
+	height: 5rem;
 }
+
 #footer-bar button {
-	height: 5em;
+	height: 5rem;
 	min-width: 20%;
 }
-#footer-bar .button-label { margin:0;}
-.list-group { padding-left: 2rem; }
-.list-group-item { align-items: center; height:4em;}
-.item-years, .item-airings { font-size:smaller; }
-.pending.spinner-grow {height: 0.5em;
-	width: 0.5em;
-	margin-bottom: 0.25em;}
+
+#footer-bar .button-label {
+	margin: 0;
+}
+
+.list-group {
+	padding-left: 2rem;
+}
+
+.list-group-item {
+	align-items: center;
+	height: 4rem;
+}
+
+.item-years,
+.item-airings {
+	font-size: smaller;
+}
+
+.pending.spinner-grow {
+	height: 0.5rem;
+	width: 0.5rem;
+	margin-bottom: 0.25rem;
+}
+
+#individual-apps {
+	text-align: center;
+}
+
+#individual-apps li {
+	font-size: 1rem;
+	vertical-align: middle;
+}

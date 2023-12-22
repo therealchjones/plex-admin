@@ -25,8 +25,6 @@ Promise.all([addDynamicContent(), hasAuth()]).then(
 	}
 );
 
-// loadDownloads();
-
 /**
  * Builds and submits a Fetch request for data. Parameters used will be URI-encoded by requestData
  * and should not yet be when the function is called.
@@ -404,132 +402,43 @@ async function hasAuth() {
 }
 async function addDynamicContent() {
 	if (debugMode) console.debug("Adding main content");
-	let content = `
-				<div
-					class="tab-pane active show"
-					id="home-content"
-					role="tabpanel"
-					aria-labelledby="home-tab"
-				>
-					<div id="login-message" class="container text-center d-none">
-						<h2>
-						  Access to this app requires an Aleph 0 account.
-						</h2>
-						<p>
-							<a href="/oauth/login?return=${encodeURI(
-								document.location.href
-							)}">Sign in via Google</a>
-						</p>
-					</div>
-				</div>
-				<div
-					class="tab-pane"
-					id="shows-content"
-					role="tabpanel"
-					aria-labelledby="shows-tab"
-				>
-					<div class="container d-block text-center" id="loading-shows">
-						<p>Loading shows...</p>
-						<div class="spinner-grow" role="status" aria-hidden="true"></div>
-					</div>
-					<ul
-						id="shows-list"
-						class="d-none container list-group list-group-flush"
-					></ul>
-				</div>
-				<div
-					class="tab-pane"
-					id="movies-content"
-					role="tabpanel"
-					aria-labelledby="movies-tab"
-				>
-					<div class="container d-block text-center" id="loading-movies">
-						<p>Loading movies...</p>
-						<div class="spinner-grow" role="status" aria-hidden="true"></div>
-					</div>
-					<button
-						type="button"
-						class="btn btn-primary"
-						id="button-movie-calendar"
-					>
-						Get Movie Calendar
-					</button>
-					<button type="button" class="btn btn-primary">
-						Available movies
-					</button>
-					<button type="button" class="btn btn-primary">Wanted movies</button>
-					<div class="container d-none overflow-auto" id="current-movies">
-						<ul
-							id="movies-list"
-							class="container list-group list-group-flush"
-						></ul>
-					</div>
-					<div class="container d-none" id="wanted-movies"></div>
-				</div>
-				<div
-					class="tab-pane"
-					id="downloads-content"
-					role="tabpanel"
-					aria-labelledby="downloads-tab"
-				>
-					<div class="container d-block text-center" id="loading-downloads">
-						<p>Loading downloads...</p>
-						<div class="spinner-grow" role="status" aria-hidden="true"></div>
-					</div>
-				</div>
-				<div
-					class="tab-pane"
-					id="advanced-content"
-					role="tabpanel"
-					aria-labelledby="advanced-tab"
-				>
-					<div class="container-fluid">
-						<p>
-							Any of the below may require logging into the Seedhost client
-							area. These will <em>not</em> ask for confirmation. Results (or a
-							login request) will open in the Seedhost client area in a new
-							window.
-						</p>
-
-						<ul class="list-group">
-							<li>
-								<a
-									name="restart-webserver"
-									id="restart-webserver-button"
-									class="btn btn-primary"
-									href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=www"
-									role="button"
-									>Restart Webserver</a
-								>
-							</li>
-							<li>
-								<a
-									href="https://www.seedhost.eu/whmcs/clientarea.php?action=productdetails&id=105973&modop=custom&a=reboot&opt=upgradePlexDediServer#tab11"
-									>upgrade Plex</a
-								>
-							</li>
-							<li>remove old torrents</li>
-							<li>remove dead torrents</li>
-							<li>restart all programs</li>
-							<li>upgrade all programs</li>
-							<li>hard reboot server</li>
-						</ul>
-					</div>
-				</div>
-`;
-	let dynamicContent = document.createElement("div");
-	dynamicContent.classList.add("tab-content", "container-fluid", "d-none");
-	dynamicContent.id = "tab-content";
-	if (debugMode) console.debug(content);
-	let newElement = document
-		.getElementsByTagName("main")[0]
-		.appendChild(dynamicContent);
-	newElement.innerHTML = content;
-	if (debugMode) {
-		console.debug("Main content added:");
-		console.debug(newElement);
-	}
-	return dynamicContent;
+	return fetch("html/content.html")
+		.then((response) => {
+			if (!response.ok) throw new Error("Unable to download page content.");
+			else return response.text();
+		})
+		.then((htmlString) => {
+			let parser = new DOMParser();
+			return parser.parseFromString(htmlString, "text/html");
+		})
+		.then((content) => {
+			console.debug("New content:");
+			console.debug(content);
+			return Array.from(content.getElementsByClassName("tab-pane"));
+		})
+		.then((divs) => {
+			let dynamicContent = document.createElement("div");
+			dynamicContent.classList.add("tab-content", "container-fluid", "d-none");
+			dynamicContent.id = "tab-content";
+			dynamicContent.append(...divs);
+			return dynamicContent;
+		})
+		.then((newContent) => {
+			document.getElementsByTagName("main")[0].appendChild(newContent);
+			if (debugMode) {
+				console.debug("Main content added:");
+				console.debug(newContent);
+			}
+			return newContent;
+		})
+		.then((newContent) => {
+			for (const element of document
+				.getElementById("footer-bar")
+				.getElementsByClassName("nav-link")) {
+				element.removeAttribute("disabled");
+			}
+			return newContent;
+		});
 }
 function enableFooter() {
 	let buttons = document
@@ -537,19 +446,24 @@ function enableFooter() {
 		.getElementsByClassName("nav-link");
 	for (let index = 0; index < buttons.length; index++) {
 		const element = buttons[index];
-		element.removeAttribute("disabled");
+		const elementName = element.id.replace(/-.*$/, "");
+		element.setAttribute("aria-controls", `${elementName}-content`);
+		element.setAttribute("data-bs-target", `#${elementName}-content`);
 	}
 }
 async function setLogin(loggedIn) {
 	if (loggedIn) {
 		enableFooter();
-		return Promise.all(loadShows(), loadMovies())
+		return Promise.all([loadShows(), loadMovies()])
 			.then(() => true)
 			.catch((reason) => {
 				throw new Error(`Unable to load remote content. Reason: ${reason}`);
 			});
 	} else {
 		let login = document.getElementById("login-message");
+		login.getElementsByTagName("a")[0].href += `?return=${encodeURI(
+			document.location.href
+		)}`;
 		login.classList.remove("d-none");
 		return false;
 	}
