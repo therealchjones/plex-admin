@@ -15,7 +15,7 @@
 	</head>
 
 	<body>
-		<main class="container-fluid overflow-auto">
+		<main id="main" class="container-fluid overflow-auto">
 			<div id="content-intro">
 				This content is intended to be dynamically loaded into the <a
 					href="https://plex.aleph0.com/chjones/admin/">Aleph 0/Seedhost/Plex Admin app</a>. It is found
@@ -23,8 +23,9 @@
 				file outside the original app. Visit <a
 					href="https://plex.aleph0.com/chjones/admin">https://plex.aleph0.com/chjones/admin</a> instead.
 			</div>
-			<div class="tab-pane active show" id="home-content" role="tabpanel" aria-labelledby="home-tab">
-				<div id="login-message" class="container text-center d-none">
+			<div id="home-content" class="tab-pane container overflow-auto active" role="tabpanel"
+				aria-labelledby="home-tab">
+				<div id="login-message" class="container text-center requires-not-logged-in">
 					<h2>
 						Access to this app requires an Aleph 0 account.
 					</h2>
@@ -32,8 +33,17 @@
 						<a href="/oauth/login">Sign in via Google</a>
 					</p>
 				</div>
+				<div id="quick-actions" class="container text-center justify-content-center requires-logged-in">
+					<h2>Quick Actions</h2>
+					<ul id="common-activities" class="container list-group-flush">
+						<li class="list-group-item list-group-item-action"><button type="button" class="btn btn-primary"
+								data-bs-toggle="modal" data-bs-target="#add-using-plex-modal">Add a movie or
+								show</button>
+						</li>
+					</ul>
+				</div>
 			</div>
-			<div class="tab-pane container overflow-auto" id="shows-content" role="tabpanel"
+			<div id="shows-content" class="tab-pane container overflow-auto" role="tabpanel"
 				aria-labelledby="shows-tab">
 				<div class="container d-block text-center" id="loading-shows">
 					<p>Loading shows...</p>
@@ -41,7 +51,7 @@
 				</div>
 				<ul id="shows-list" class="d-none container list-group list-group-flush"></ul>
 			</div>
-			<div class="tab-pane container overflow-auto" id="movies-content" role="tabpanel"
+			<div id="movies-content" class="tab-pane container overflow-auto" role="tabpanel"
 				aria-labelledby="movies-tab">
 				<div class="container d-block text-center" id="loading-movies">
 					<p>Loading movies...</p>
@@ -59,14 +69,14 @@
 				</div>
 				<div class="container d-none" id="wanted-movies"></div>
 			</div>
-			<div class="tab-pane container overflow-auto" id="downloads-content" role="tabpanel"
+			<div id="downloads-content" class="tab-pane container overflow-auto" role="tabpanel"
 				aria-labelledby="downloads-tab">
 				<div class="container d-block text-center" id="loading-downloads">
 					<p>Loading downloads...</p>
 					<div class="spinner-grow" role="status" aria-hidden="true"></div>
 				</div>
 			</div>
-			<div class="tab-pane container overflow-auto" id="advanced-content" role="tabpanel"
+			<div id="advanced-content" class="tab-pane container overflow-auto" role="tabpanel"
 				aria-labelledby="advanced-tab">
 				<div id="seedhost-functions container-fluid">
 					<p>
@@ -102,13 +112,13 @@
 							<a class="stretched-link text-decoration-none" href=" https://app.plex.tv/web/app"
 								target="_blank">
 								<!-- License: MIT. Made by edent: https://github.com/edent/SuperTinyIcons -->
-								<svg xmlns="http://www.w3.org/2000/svg" aria-label="Plex" role="img" height="1.5rem"
+								<svg xmlns="http://www.w3.org/2000/svg" aria-label="Plex" role="img" height="1.5em"
 									viewBox="0 0 512 512">
 									<rect width="512" height="512" rx="15%" fill="#282a2d" />
 									<path d="m256 70h-108l108 186-108 186h108l108-186z" fill="#e5a00d" />
 								</svg>
 								Plex
-								<svg xmlns="http://www.w3.org/2000/svg" height="1.5rem" fill="currentColor"
+								<svg xmlns="http://www.w3.org/2000/svg" height="1.5em" fill="currentColor"
 									class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
 									<path fill-rule="evenodd"
 										d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
@@ -119,7 +129,7 @@
 						<li class="list-group-item justify-content-center list-group-item-action d-flex"><a
 								class="stretched-link text-decoration-none"
 								href="https://plex.aleph0.com/chjones/bazarr/" target="_blank">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" height="1.5rem">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" height="1.5em">
 									<defs>
 										<clipPath id="a">
 											<path d="M0 512h512V0H0z" />
@@ -137,7 +147,7 @@
 									</g>
 								</svg>
 								Bazarr (subtitles)
-								<svg xmlns="http://www.w3.org/2000/svg" height="1.5rem" fill="currentColor"
+								<svg xmlns="http://www.w3.org/2000/svg" height="1.5em" fill="currentColor"
 									class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
 									<path fill-rule="evenodd"
 										d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
@@ -148,7 +158,7 @@
 						<li class="list-group-item justify-content-center d-flex list-group-item-action"><a
 								class="stretched-link text-decoration-none" href="http://server1359.seedhost.eu:14450/"
 								target="_blank">
-								<svg fill="none" version="1.1" viewBox="0 0 1500 1500" height="1.5rem"
+								<svg fill="none" version="1.1" viewBox="0 0 1500 1500" height="1.5em"
 									xmlns="http://www.w3.org/2000/svg">
 									<g transform="scale(15.625)">
 										<circle cx="49.343" cy="48.776" r="27.224" fill="#131928" stroke="#131928"
@@ -179,7 +189,7 @@
 									</defs>
 								</svg>
 								Overseerr (requests)
-								<svg xmlns="http://www.w3.org/2000/svg" height="1.5rem" fill="currentColor"
+								<svg xmlns="http://www.w3.org/2000/svg" height="1.5em" fill="currentColor"
 									class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
 									<path fill-rule="evenodd"
 										d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
@@ -190,7 +200,7 @@
 						<li class="list-group-item justify-content-center d-flex list-group-item-action"><a
 								class="stretched-link text-decoration-none" href="https://plex.aleph0.com/prowlarr/"
 								target="_blank">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" height="1.5rem">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" height="1.5em">
 									<g transform="matrix(.256 0 0 -.256 35.887 94.397)">
 										<circle cx="-46.403" cy="-274.96" r="90" fill="#ffe6d5" fill-rule="evenodd"
 											transform="scale(1 -1)" />
@@ -293,7 +303,7 @@
 									</g>
 								</svg>
 								Prowlarr (indexers)
-								<svg xmlns="http://www.w3.org/2000/svg" height="1.5rem" fill="currentColor"
+								<svg xmlns="http://www.w3.org/2000/svg" height="1.5em" fill="currentColor"
 									class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
 									<path fill-rule="evenodd"
 										d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
@@ -303,7 +313,7 @@
 						<li class="list-group-item justify-content-center d-flex list-group-item-action"><a
 								class="stretched-link text-decoration-none"
 								href="https://plex.aleph0.com/chjones/radarr/" target="_blank">
-								<svg height="1.5rem" viewBox="0 0 1024 1024" version="1.1"
+								<svg height="1.5em" viewBox="0 0 1024 1024" version="1.1"
 									xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
 									<defs>
 										<rect width="1024" height="1024" id="artboard_1" />
@@ -328,7 +338,7 @@
 									</g>
 								</svg>
 								Radarr (movies)
-								<svg xmlns="http://www.w3.org/2000/svg" height="1.5rem" fill="currentColor"
+								<svg xmlns="http://www.w3.org/2000/svg" height="1.5em" fill="currentColor"
 									class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
 									<path fill-rule="evenodd"
 										d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
@@ -338,13 +348,13 @@
 						<li class="list-group-item d-flex list-group-item-action justify-content-center"><a
 								class="stretched-link text-decoration-none" href="https://plex.aleph0.com/rutorrent/"
 								target="_blank">
-								<svg height="1.5rem" viewBox="0 0 55 55" xmlns="http://www.w3.org/2000/svg"
+								<svg height="1.5em" viewBox="0 0 55 55" xmlns="http://www.w3.org/2000/svg"
 									xmlns:xlink="http://www.w3.org/1999/xlink">
 									<image id="Image-Layer" x="0" y="0" width="55" height="55"
 										xlink:href="data:image/png;base64, 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" />
 								</svg>
 								ruTorrent (downloads)
-								<svg xmlns="http://www.w3.org/2000/svg" height="1.5rem" fill="currentColor"
+								<svg xmlns="http://www.w3.org/2000/svg" height="1.5em" fill="currentColor"
 									class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
 									<path fill-rule="evenodd"
 										d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
@@ -354,7 +364,7 @@
 						<li class="list-group-item d-flex justify-content-center list-group-item-action"><a
 								class="stretched-link text-decoration-none" href="https://plex.aleph0.com/sonarr/"
 								target="_blank">
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" height="1.5rem">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" height="1.5em">
 									<g clip-rule="evenodd">
 										<path fill="#eee" fill-rule="evenodd"
 											d="M47.978 24c0 6.602-2.331 12.26-6.993 16.974a3.773 3.773 0 0 1-.52.509 20.53 20.53 0 0 1-2.435 2.047C33.988 46.51 29.318 48 24.022 48c-5.304 0-9.966-1.49-13.986-4.47a21.726 21.726 0 0 1-2.988-2.556c-3.622-3.6-5.846-7.783-6.672-12.548-.162-.93-.27-1.874-.32-2.833a38.27 38.27 0 0 1 0-3.197c0-.052.014-.104.044-.155.346-5.887 2.662-10.973 6.948-15.259C11.762 2.327 17.42 0 24.022 0c6.624 0 12.279 2.327 16.963 6.982 4.662 4.743 6.993 10.416 6.993 17.018z" />
@@ -369,7 +379,7 @@
 									</g>
 								</svg>
 								Sonarr (shows)
-								<svg xmlns="http://www.w3.org/2000/svg" height="1.5rem" fill="currentColor"
+								<svg xmlns="http://www.w3.org/2000/svg" height="1.5em" fill="currentColor"
 									class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
 									<path fill-rule="evenodd"
 										d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
@@ -381,6 +391,46 @@
 			</div>
 
 		</main>
+		<div id="modal-dialogs">
+			<div id="add-using-plex-modal" class="modal fade" tabindex="-1" style="z-index:9999 ;">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h2 class="modal-title">Add a show or movie</h2>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<p>To add a new movie or show, open Plex, search
+								for the movie or show to add, and choose "Add to Watchlist". It
+								may take
+								a few hours or days for the movie or show to appear in Plex. <a
+									href="https://support.plex.tv/articles/universal-watchlist/">Learn more
+									about the
+									Plex Watchlist.<svg xmlns="http://www.w3.org/2000/svg" height="1em"
+										fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+										<path fill-rule="evenodd"
+											d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+										<path fill-rule="evenodd"
+											d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+									</svg></a>
+							</p>
+						</div>
+						<div class="modal-footer">
+							<a href="https://app.plex.tv/web/app" target="_blank" class="btn btn-primary">Open
+								Plex
+								<svg xmlns="http://www.w3.org/2000/svg" height="1em" fill="currentColor"
+									class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
+									<path fill-rule="evenodd"
+										d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5" />
+									<path fill-rule="evenodd"
+										d="M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0z" />
+								</svg></a>
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 
 </html>
