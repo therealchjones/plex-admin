@@ -412,8 +412,11 @@ async function addDynamicContent() {
 			return parser.parseFromString(htmlString, "text/html");
 		})
 		.then((content) => {
-			console.debug("New content:");
+			console.debug("Main content:");
 			console.debug(content);
+			hideRequires(content);
+			let modals = content.getElementById("modal-dialogs");
+			document.body.append(modals);
 			return Array.from(content.getElementsByClassName("tab-pane"));
 		})
 		.then((divs) => {
@@ -453,18 +456,73 @@ function enableFooter() {
 }
 async function setLogin(loggedIn) {
 	if (loggedIn) {
-		enableFooter();
-		return Promise.all([loadShows(), loadMovies()])
-			.then(() => true)
-			.catch((reason) => {
-				throw new Error(`Unable to load remote content. Reason: ${reason}`);
-			});
+		return login();
 	} else {
-		let login = document.getElementById("login-message");
-		login.getElementsByTagName("a")[0].href += `?return=${encodeURI(
-			document.location.href
-		)}`;
-		login.classList.remove("d-none");
-		return false;
+		return logout();
 	}
+}
+/**
+ * The login() function does not actually log a user in, but it updates the interface to be
+ * appropriate for a logged in user. This is useful for testing, but server-side functions
+ * requiring login will still not work if the user is not actually logged in.
+ *
+ * @returns a Promise that fulfills with "true" if data from the server requiring login is returned successfully
+ */
+async function login() {
+	hideRequiresNotLoggedIn(document);
+	showRequiresLoggedIn(document);
+	enableFooter();
+	return Promise.all([loadShows(), loadMovies()])
+		.then(() => true)
+		.catch((reason) => {
+			throw new Error(`Unable to load remote content. Reason: ${reason}`);
+		});
+}
+async function logout() {
+	hideRequiresLoggedIn(document);
+	document
+		.getElementById("login-message")
+		.getElementsByTagName("a")[0].href = `/oauth/login?return=${encodeURI(
+		document.location.href
+	)}`;
+	showRequiresNotLoggedIn(document);
+	return false;
+}
+function hideRequires(htmlDocument) {
+	hideRequiresLoggedIn(htmlDocument);
+	hideRequiresNotLoggedIn(htmlDocument);
+	return htmlDocument;
+}
+function hideRequiresLoggedIn(htmlDocument) {
+	Array.from(htmlDocument.getElementsByClassName("requires-logged-in")).forEach(
+		(element) => {
+			element.classList.add("d-none");
+		}
+	);
+	return htmlDocument;
+}
+function hideRequiresNotLoggedIn(htmlDocument) {
+	Array.from(
+		htmlDocument.getElementsByClassName("requires-not-logged-in")
+	).forEach((element) => {
+		element.classList.add("d-none");
+	});
+	return htmlDocument;
+}
+function showRequiresLoggedIn(htmlDocument) {
+	Array.from(htmlDocument.getElementsByClassName("requires-logged-in")).forEach(
+		(element) => {
+			element.classList.remove("d-none");
+		}
+	);
+	return htmlDocument;
+}
+
+function showRequiresNotLoggedIn(htmlDocument) {
+	Array.from(
+		htmlDocument.getElementsByClassName("requires-not-logged-in")
+	).forEach((element) => {
+		element.classList.remove("d-none");
+	});
+	return htmlDocument;
 }

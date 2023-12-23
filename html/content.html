@@ -15,7 +15,7 @@
 	</head>
 
 	<body>
-		<main class="container-fluid overflow-auto">
+		<main id="main" class="container-fluid overflow-auto">
 			<div id="content-intro">
 				This content is intended to be dynamically loaded into the <a
 					href="https://plex.aleph0.com/chjones/admin/">Aleph 0/Seedhost/Plex Admin app</a>. It is found
@@ -23,8 +23,9 @@
 				file outside the original app. Visit <a
 					href="https://plex.aleph0.com/chjones/admin">https://plex.aleph0.com/chjones/admin</a> instead.
 			</div>
-			<div class="tab-pane active show" id="home-content" role="tabpanel" aria-labelledby="home-tab">
-				<div id="login-message" class="container text-center">
+			<div id="home-content" class="tab-pane container overflow-auto active" role="tabpanel"
+				aria-labelledby="home-tab">
+				<div id="login-message" class="container text-center requires-not-logged-in">
 					<h2>
 						Access to this app requires an Aleph 0 account.
 					</h2>
@@ -32,7 +33,7 @@
 						<a href="/oauth/login">Sign in via Google</a>
 					</p>
 				</div>
-				<div id="quick-actions" class="container text-center justify-content-center">
+				<div id="quick-actions" class="container text-center justify-content-center requires-logged-in">
 					<h2>Quick Actions</h2>
 					<ul id="common-activities" class="container list-group-flush">
 						<li class="list-group-item list-group-item-action"><button type="button" class="btn btn-primary"
@@ -42,7 +43,7 @@
 					</ul>
 				</div>
 			</div>
-			<div class="tab-pane container overflow-auto" id="shows-content" role="tabpanel"
+			<div id="shows-content" class="tab-pane container overflow-auto" role="tabpanel"
 				aria-labelledby="shows-tab">
 				<div class="container d-block text-center" id="loading-shows">
 					<p>Loading shows...</p>
@@ -50,7 +51,7 @@
 				</div>
 				<ul id="shows-list" class="d-none container list-group list-group-flush"></ul>
 			</div>
-			<div class="tab-pane container overflow-auto" id="movies-content" role="tabpanel"
+			<div id="movies-content" class="tab-pane container overflow-auto" role="tabpanel"
 				aria-labelledby="movies-tab">
 				<div class="container d-block text-center" id="loading-movies">
 					<p>Loading movies...</p>
@@ -68,14 +69,14 @@
 				</div>
 				<div class="container d-none" id="wanted-movies"></div>
 			</div>
-			<div class="tab-pane container overflow-auto" id="downloads-content" role="tabpanel"
+			<div id="downloads-content" class="tab-pane container overflow-auto" role="tabpanel"
 				aria-labelledby="downloads-tab">
 				<div class="container d-block text-center" id="loading-downloads">
 					<p>Loading downloads...</p>
 					<div class="spinner-grow" role="status" aria-hidden="true"></div>
 				</div>
 			</div>
-			<div class="tab-pane container overflow-auto" id="advanced-content" role="tabpanel"
+			<div id="advanced-content" class="tab-pane container overflow-auto" role="tabpanel"
 				aria-labelledby="advanced-tab">
 				<div id="seedhost-functions container-fluid">
 					<p>
