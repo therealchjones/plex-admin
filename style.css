@@ -21,10 +21,7 @@ main {
 
 #footer-bar .button-label {
 	margin: 0;
-}
-
-.list-group {
-	padding-left: 2rem;
+	font-size: small;
 }
 
 .list-group-item {
