@@ -14,7 +14,11 @@ const processes = {
 	downloads: null,
 };
 
-Promise.all([addDynamicContent(), hasAuth()]).then(
+const loadDynamicContent = getDynamicContent("html/content.html")
+	.then(styleDynamicContent)
+	.then(addDynamicContent);
+
+Promise.all([loadDynamicContent, hasAuth()]).then(
 	([dynamicContent, loggedIn]) => {
 		if (debugMode) console.debug("displaying dynamic content");
 		let loadingContent = document.getElementById("loading-content");
@@ -24,6 +28,127 @@ Promise.all([addDynamicContent(), hasAuth()]).then(
 		return setLogin(loggedIn);
 	}
 );
+async function getDynamicContent(url) {
+	return fetch(url)
+		.then((response) => {
+			if (!response.ok) throw new Error("Unable to download dynamic content.");
+			else return response.text();
+		})
+		.then((htmlString) => {
+			let parser = new DOMParser();
+			return parser.parseFromString(htmlString, "text/html");
+		});
+}
+async function styleDynamicContent(content) {
+	await hideRequires(content);
+	await hideTemplates(content);
+	content.getElementById("tab-content").classList.add("tab-content");
+	return content;
+}
+async function addDynamicContent(content) {
+	const modals = content.getElementById("modal-dialogs");
+	document.body.append(modals);
+	const dynamicContent = content.getElementById("tab-content");
+	dynamicContent.classList.add("d-none");
+	document.getElementsByTagName("main")[0].appendChild(dynamicContent);
+	await enableNavbar();
+	return dynamicContent;
+}
+async function enableNavbar() {
+	const navButtons = document
+		.getElementById("footer-bar")
+		.getElementsByClassName("nav-link");
+	for (const element of navButtons) {
+		element.removeAttribute("disabled");
+	}
+}
+/**
+ * Using television show data and a template element, returns a new element containing information about the show
+ * @param {object} showData An object describing a show
+ * @param {HTMLLIElement} template A template element on which to base the new element
+ * @returns {Promise<HTMLLIElement>}
+ */
+async function buildShowEntry(showData, template) {
+	let end = "";
+	let previousAiring = showData.previousAiring;
+	let nextAiring = "";
+	if (showData.ended) {
+		if (showData.lastAired) end = showData.lastAired;
+		else if (previousAiring) end = previousAiring;
+	} else {
+		if (showData.nextAiring) nextAiring = showData.nextAiring;
+	}
+	let start = showData.firstAired ? showData.firstAired : showData.year;
+	let title = showData.title;
+	if (start) {
+		start = new Date(start).getFullYear();
+		// remove a date from the title if present
+		if (/ \((19|20)..\)$/.test(title)) title = title.slice(0, -7);
+	}
+	if (end) end = new Date(end).getFullYear();
+	let itemId = "show-item-" + showData.titleSlug;
+	let sonarrId = showData.id;
+	let entry = template.cloneNode(true);
+	entry.classList.remove("template");
+	entry.classList.remove("d-none");
+	if (debugMode) console.debug(entry);
+	entry.id = itemId;
+	let templateString = entry.getElementsByClassName("item-title")[0].innerHTML;
+	entry.getElementsByClassName("item-title")[0].innerHTML =
+		templateString.replace(/itemTitle/, title);
+	if (start)
+		entry.getElementsByClassName(
+			"item-years"
+		)[0].innerHTML = `(${start}-${end})`;
+	else entry.getElementsByClassName("item-years")[0].remove();
+	if (showData.ended) entry.getElementsByClassName("item-airings")[0].remove();
+	else {
+		if (previousAiring) {
+			previousAiring = new Date(previousAiring);
+			templateString = entry.getElementsByClassName("item-previous-airing")[0]
+				.innerHTML;
+			entry.getElementsByClassName("item-previous-airing")[0].innerHTML =
+				templateString.replace(/previousAiring/, getDateString(previousAiring));
+			let confirmed = entry.getElementsByClassName("confirmed")[0];
+			confirmed.classList.remove("d-inline-block");
+			confirmed.classList.add("d-none");
+			let disconfirmed = entry.getElementsByClassName("disconfirmed")[0];
+			disconfirmed.classList.remove("d-inline-block");
+			disconfirmed.classList.add("d-none");
+			checkEpisode(sonarrId, previousAiring)
+				.then((result) => {
+					let pending = entry.getElementsByClassName("pending")[0];
+					pending.classList.remove("d-inline-box");
+					pending.classList.add("d-none");
+					if (result) {
+						confirmed.classList.remove("d-none");
+						confirmed.classList.add("d-inline-block");
+					} else {
+						disconfirmed.classList.remove("d-none");
+						disconfirmed.classList.add("d-inline-block");
+					}
+				})
+				.catch((reason) => {
+					console.error(
+						`Unable to determine status of most recent episode of '${title}: ${reason}`
+					);
+				});
+		} else {
+			entry.getElementsByClassName("item-previous-airing").remove();
+		}
+		if (nextAiring) {
+			nextAiring = new Date(nextAiring);
+			nextAiring = getDateString(nextAiring);
+		} else {
+			nextAiring = "unknown";
+		}
+		templateString =
+			entry.getElementsByClassName("item-next-airing")[0].innerHTML;
+		entry.getElementsByClassName("item-next-airing")[0].innerHTML =
+			templateString.replace(/nextAiring/, nextAiring);
+	}
+	return entry;
+}
 
 /**
  * Builds and submits a Fetch request for data. Parameters used will be URI-encoded by requestData
@@ -148,83 +273,29 @@ async function getDb(dbName) {
  * @returns a Promise to load the list of TV shows into the page's Shows list
  */
 async function loadShows() {
-	return Promise.resolve(getDb("shows"))
-		.then((showsDb) => {
-			let list = document.getElementById("shows-list");
-			if (!showsDb.json || showsDb.json.response === undefined)
-				throw new Error("No list of shows in database");
-			showsDb.json.response.forEach((element) => {
-				let end = "";
-				let previousAiring = element.previousAiring;
-				let nextAiring = "";
-				if (element.ended) {
-					if (element.lastAired) end = element.lastAired;
-					else if (previousAiring) end = previousAiring;
-				} else {
-					if (element.nextAiring) nextAiring = element.nextAiring;
-				}
-				let start = element.firstAired ? element.firstAired : element.year;
-				let title = element.title;
-				if (start) {
-					start = new Date(start).getFullYear();
-					// remove a date from the title if present
-					if (/ \((19|20)..\)$/.test(title)) title = title.slice(0, -7);
-				}
-				if (end) end = new Date(end).getFullYear();
-				let itemId = "show-item-" + element.titleSlug;
-				let sonarrId = element.id;
-				let entry = `<li class="row list-group-item list-group-item-action py-2 lh-sm d-flex" id=${itemId}>
-					<div class="item-title col-7 pe-0">${title}`;
-				if (start)
-					entry += ` <span class="item-years">(${start}-${end})</span></div>`;
-				entry += `<div class="item-airings col text-end ps-0">`;
-				if (!element.ended) {
-					if (previousAiring) {
-						previousAiring = new Date(previousAiring);
-
-						entry += `
-						<div class="item-previous-airing p-0">Newest: ${getDateString(previousAiring)}
-						<span class="pending spinner-grow d-inline-block text-warning"></span>
-						<span class="confirmed d-none text-success"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-check confirmed" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg></span>
-						<span class="disconfirmed d-none text-danger"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/></svg></span></div>`;
-						// identify if we already have this episode and update list and db
-						checkEpisode(sonarrId, previousAiring).then((result) => {
-							let checks =
-								document.getElementById(itemId).children[1].children[0]
-									.children;
-							checks[0].classList.remove("d-inline-box");
-							checks[0].classList.add("d-none");
-							if (result) {
-								checks[1].classList.remove("d-none");
-								checks[1].classList.add("d-inline-block");
-							} else {
-								checks[2].classList.remove("d-none");
-								checks[2].classList.add("d-inline-block");
-							}
-						});
-					}
-					entry += `<div class="item-next-airing p-0">Next: `;
-					if (nextAiring) {
-						nextAiring = new Date(nextAiring);
-						entry += `${getDateString(nextAiring)}`;
-					} else {
-						entry += "unknown";
-					}
-					entry += "</div></div>";
-				}
-				entry += "</li>";
-				list.innerHTML += entry;
-			});
-			return list;
+	const showsDb = await getDb("shows");
+	if (!showsDb.json || showsDb.json.response === undefined)
+		throw new Error("No list of shows in database");
+	let list = document.getElementById("shows-list");
+	let template = document.getElementById("show-item-aps-template");
+	let rowPromises = [];
+	showsDb.json.response.forEach((element) => {
+		rowPromises.push(buildShowEntry(element, template));
+	});
+	template.remove();
+	await Promise.all(rowPromises)
+		.then((results) => {
+			results.forEach((element) => list.append(element));
 		})
-		.then((list) => {
-			let loading = document.getElementById("loading-shows");
-			loading.classList.remove("d-block");
-			loading.classList.add("d-none");
-			list.classList.remove("d-none");
-			list.classList.add("d-flex");
-			return list;
+		.catch((reason) => {
+			throw new Error(`One or more shows could not be added: ${reason}`);
 		});
+	let loading = document.getElementById("loading-shows");
+	loading.classList.remove("d-block");
+	loading.classList.add("d-none");
+	list.classList.remove("d-none");
+	list.classList.add("d-flex");
+	return list;
 }
 /**
  * Obtains the list of all availableMovies and loads the UI with the information (not yet implemented)
@@ -400,49 +471,6 @@ async function hasAuth() {
 		return false;
 	}
 }
-async function addDynamicContent() {
-	if (debugMode) console.debug("Adding main content");
-	return fetch("html/content.html")
-		.then((response) => {
-			if (!response.ok) throw new Error("Unable to download page content.");
-			else return response.text();
-		})
-		.then((htmlString) => {
-			let parser = new DOMParser();
-			return parser.parseFromString(htmlString, "text/html");
-		})
-		.then((content) => {
-			console.debug("Main content:");
-			console.debug(content);
-			hideRequires(content);
-			let modals = content.getElementById("modal-dialogs");
-			document.body.append(modals);
-			return Array.from(content.getElementsByClassName("tab-pane"));
-		})
-		.then((divs) => {
-			let dynamicContent = document.createElement("div");
-			dynamicContent.classList.add("tab-content", "container-fluid", "d-none");
-			dynamicContent.id = "tab-content";
-			dynamicContent.append(...divs);
-			return dynamicContent;
-		})
-		.then((newContent) => {
-			document.getElementsByTagName("main")[0].appendChild(newContent);
-			if (debugMode) {
-				console.debug("Main content added:");
-				console.debug(newContent);
-			}
-			return newContent;
-		})
-		.then((newContent) => {
-			for (const element of document
-				.getElementById("footer-bar")
-				.getElementsByClassName("nav-link")) {
-				element.removeAttribute("disabled");
-			}
-			return newContent;
-		});
-}
 function enableFooter() {
 	let buttons = document
 		.getElementById("footer-bar")
@@ -525,4 +553,9 @@ function showRequiresNotLoggedIn(htmlDocument) {
 		element.classList.remove("d-none");
 	});
 	return htmlDocument;
+}
+function hideTemplates(htmlDocument) {
+	Array.from(htmlDocument.getElementsByClassName("template")).forEach(
+		(element) => element.classList.add("d-none")
+	);
 }
