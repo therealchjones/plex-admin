@@ -27,6 +27,7 @@ A system to manage a media center ecosystem
 - (advanced?) child management of plex
 - add show or movie
 - (advanced) other in-app management stuff
+- Why hasn't the episode downloaded?
 
 # Development Notes
 
