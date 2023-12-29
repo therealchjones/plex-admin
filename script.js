@@ -16,7 +16,13 @@ const processes = {
 
 const loadDynamicContent = getDynamicContent("html/content.html")
 	.then(styleDynamicContent)
-	.then(addDynamicContent);
+	.then(addDynamicContent)
+	.catch((reason) => {
+		throwFatalError(
+			"An error occurred. Page content could not be loaded. Console output may include more information.",
+			reason
+		);
+	});
 
 Promise.all([loadDynamicContent, hasAuth()]).then(
 	([dynamicContent, loggedIn]) => {
@@ -28,6 +34,58 @@ Promise.all([loadDynamicContent, hasAuth()]).then(
 		return setLogin(loggedIn);
 	}
 );
+async function throwFatalError(message = "", error = null) {
+	if (debugMode)
+		console.debug(
+			`Throwing fatal error. Message: ${message}. Error: ${error}.`
+		);
+	if (message.length === 0)
+		message = "An unrecoverable error occurred. Halting.";
+	await showErrorDialog(message);
+	if (error === null) throw new Error(message);
+	else throw new Error(message, { cause: error });
+}
+/**
+ * Display an error dialog with an optional custom message. If no message
+ * is given, the text "An error occurred. Console output may include more
+ * information." is used.
+ * @param {string} message Message to display in the dialog
+ */
+async function showErrorDialog(message = "") {
+	let modal = document.getElementById("error-dialog");
+	console.debug(modal);
+	if (modal === null) modal = await buildErrorDialog();
+	if (message.length === 0)
+		message = "An error occurred. Console output may include more information.";
+	modal.getElementsByClassName("modal-body")[0].innerText = message;
+	const bsModal = new bootstrap.Modal(modal);
+	console.debug("Modal modalized:");
+	console.debug(bsModal);
+	bsModal.show();
+}
+async function buildErrorDialog() {
+	// because this may run even in the absence of the content template,
+	// we create the dialog from scratch here
+	const modal = document.createElement("div");
+	modal.innerHTML = `<div class="modal-dialog modal-dialog-centered" role="document">
+			<div class="modal-content">
+				<div class="modal-body"></div>
+			</div>
+		</div>`;
+	modal.classList.add("modal", "fade");
+	modal.id = "error-dialog";
+	modal.setAttribute("aria-labelledby", "Error");
+	modal.setAttribute("role", "dialog");
+	modal.setAttribute("aria-hidden", "true");
+	modal.setAttribute("data-bs-backdrop", "static");
+	console.debug("Modal created:");
+	console.debug(modal);
+	document.body.appendChild(modal);
+	console.debug("Modal added:");
+	console.debug(modal);
+	return modal;
+}
+
 async function getDynamicContent(url) {
 	return fetch(url)
 		.then((response) => {
