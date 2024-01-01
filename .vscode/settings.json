@@ -1,5 +1,19 @@
 {
 	"livePreview.autoRefreshPreview": "On Changes to Saved Files",
 	"livePreview.debugOnExternalPreview": false,
-	"livePreview.tasks.runTaskWithExternalPreview": false
+	"livePreview.tasks.runTaskWithExternalPreview": false,
+	"cSpell.languageSettings": [
+		{
+			"languageId": "javascript",
+			"dictionaries": [
+				"html"
+			]
+		}
+	],
+	"cSpell.words": [
+		"airdate",
+		"disconfirmed",
+		"radarr",
+		"sonarr"
+	]
 }

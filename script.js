@@ -59,7 +59,7 @@ async function showErrorDialog(message = "") {
 		message = "An error occurred. Console output may include more information.";
 	modal.getElementsByClassName("modal-body")[0].innerText = message;
 	const bsModal = new bootstrap.Modal(modal);
-	console.debug("Modal modalized:");
+	console.debug("Modal objectified:");
 	console.debug(bsModal);
 	bsModal.show();
 }
