@@ -85,10 +85,16 @@ async function getDynamicContent (url) {
       return parser.parseFromString(htmlString, 'text/html')
     })
 }
+/**
+ * Applies classes, styles, and events to "dynamic" content prior to adding it to the root document
+ * @param {Document} content Dynamic content to be styled
+ * @returns A promise for the document with appropriate styles applied
+ */
 async function styleDynamicContent (content) {
   await hideRequires(content)
   await hideTemplates(content)
   content.getElementById('tab-content').classList.add('tab-content')
+  content.getElementById('button-movie-calendar').onclick = getMovieCalendar
   return content
 }
 async function addDynamicContent (content) {
@@ -436,42 +442,39 @@ async function checkEpisode (seriesId, airDate) {
     })
 }
 
-// Need to change this to a cleaner function ensuring adequate authorization
-async function checkAuth () {
-  if (!(await hasAuth())) {
-    const warning = document.createElement('div')
-    warning.innerHTML =
-      "<h1>Not Authorized<span class='visually hidden'>: </p></h1>"
-    if (
-      window.location.origin === 'https://plex.aleph0.com' ||
-      window.location.origin === 'https://plex.aleph0.com:443'
-    ) {
-      warning.innerHTML += `<p>The origin (${window.location.origin}) is correct, `
-      warning.innerHTML +=
-        'So your authorization probably just needs to be refreshed. '
-      warning.innerHTML +=
-        'Try refreshing the page or returning to <a href="https://plex.aleph0.com">https://plex.aleph0.com</a>.</p>'
+async function showAuthError () {
+  let warning = 'Not Authorized: '
+  if (
+    window.location.origin === 'https://plex.aleph0.com' ||
+    window.location.origin === 'https://plex.aleph0.com:443'
+  ) {
+    warning += `The origin (${window.location.origin}) is correct, `
+    warning +=
+      'So your authorization probably just needs to be refreshed. '
+    warning +=
+      'Try refreshing the page or returning to https://plex.aleph0.com.'
+  } else {
+    warning += `The origin (${window.location.origin}) is not 'https://plex.aleph0.com/. `
+    if (window.location.origin === 'http://127.0.0.1:3000') {
+      warning +=
+        'Even though the web application allows them for testing from 127.0.01:3000, '
+      warning +=
+        'this browser may be refusing third-party cookies, or your authorization may need to be refreshed.'
+      warning +=
+        'Try refreshing the page or visiting https://plex.aleph0.com before returning here, '
+      warning +=
+        'and consider allowing third-party cookies in your browser.'
     } else {
-      warning.innerHTML += `<p>The origin (${window.location.origin}) is not 'https://plex.aleph0.com/. `
-      if (window.location.origin === 'http://127.0.0.1:3000') {
-        warning.innerHTML +=
-          'Even though the web application allows them for testing from 127.0.01:3000, '
-        warning.innerHTML +=
-          'this browser may be refusing third-party cookies, or your authorization may need to be refreshed. </p>'
-        warning.innerHTML +=
-          "<p>Try refreshing the page or visiting <a href='https://plex.aleph0.com/'>https://plex.aleph0.com</a> before returning here, "
-        warning.innerHTML +=
-          'and consider allowing third-party cookies in your browser.</p>'
-      } else {
-        warning.innerHTML +=
-          'You probably need to directly visit <a href="https://plex.aleph0.com">https://plex.aleph0.com</a>.</p>'
-      }
+      warning +=
+        'You probably need to directly visit https://plex.aleph0.com.'
     }
-    console.warn(warning.innerText)
-    return false
   }
-  return true
+  console.warn(warning)
 }
+/**
+ * Determines if the app has current authorization for accessing secure data
+ * @returns true if able to obtain secure data, false otherwise
+ */
 async function hasAuth () {
   if (debugMode) {
     console.debug(
@@ -485,6 +488,7 @@ async function hasAuth () {
       console.debug('Full response: ')
       console.debug(response)
       console.debug('The app is not authorized.')
+      showAuthError()
     }
     return false
   }
