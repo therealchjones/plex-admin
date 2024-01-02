@@ -3,10 +3,13 @@
         "browser": true,
         "es2021": true
     },
-    "extends": "standard",
+    "extends": [
+        "standard",
+        "eslint:recommended"
+    ],
     "parserOptions": {
-        "ecmaVersion": "latest"
+        "ecmaVersion": "latest",
+        "sourceType": "script"
     },
-    "rules": {
-    }
+    "rules": {}
 }
