@@ -11,12 +11,12 @@ A system to manage a media center ecosystem
 1. Place admin-secrets.sh in a directory _not_ accessible by the web server, but accessible to proxy.cgi
 1. Edit the files to specify configurable information
 
-# Capabilities
+## Capabilities
 
 - When was the most recent episode, and do we have it?
 - When is the next episode?
 
-# To Do
+## To Do
 
 - Recent and upcoming airings of all shows (calendar style)
 - movie release dates
@@ -29,7 +29,7 @@ A system to manage a media center ecosystem
 - (advanced) other in-app management stuff
 - Why hasn't the episode downloaded?
 
-# Development Notes
+## Development Notes
 
 - Comments are important and plentiful. Read them.
 - If testing on a local machine while the API proxy is on a remote server and requires authentication,
