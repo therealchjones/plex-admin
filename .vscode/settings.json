@@ -1,4 +1,7 @@
 {
+	"files.associations": {
+		".htmlhintrc": "jsonc"
+	},
 	"livePreview.autoRefreshPreview": "On Changes to Saved Files",
 	"livePreview.debugOnExternalPreview": false,
 	"livePreview.tasks.runTaskWithExternalPreview": false,
@@ -25,6 +28,7 @@
 		"Seedhost: SeedHost"
 	],
 	"cSpell.ignorePaths": [
+		".htmlhintrc",
 		"package-lock.json",
 		"node_modules",
 		"vscode-extension",
