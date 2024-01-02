@@ -15,5 +15,13 @@
 		"disconfirmed",
 		"radarr",
 		"sonarr"
-	]
+	],
+	"javascript.format.semicolons": "remove",
+	"javascript.preferences.quoteStyle": "single",
+	"javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+	"[javascript]": {
+		"editor.tabSize": 2,
+		"editor.insertSpaces": true,
+		"editor.defaultFormatter": "vscode.typescript-language-features",
+	}
 }
