@@ -12,9 +12,17 @@
 	],
 	"cSpell.words": [
 		"airdate",
+		"Bazarr",
 		"disconfirmed",
-		"radarr",
-		"sonarr"
+		"edent",
+		"Overseerr",
+		"Prowlarr",
+		"Radarr",
+		"Sonarr",
+		"Watchlist"
+	],
+	"cSpell.suggestWords": [
+		"Seedhost: SeedHost"
 	],
 	"cSpell.ignorePaths": [
 		"package-lock.json",
