@@ -1,0 +1,37 @@
+{
+  // add <svg> descendent elements that are allowed to have camelCase
+  "tagname-lowercase": [
+    "animateMotion",
+    "animateTransform",
+    "clipPath",
+    "feBlend",
+    "feColorMatrix",
+    "feComponentTransfer",
+    "feComposite",
+    "feConvolveMatrix",
+    "feDiffuseLighting",
+    "feDisplacementMap",
+    "feDistantLight",
+    "feDropShadow",
+    "feFlood",
+    "feFuncA",
+    "feFuncB",
+    "feFuncG",
+    "feFuncR",
+    "feGaussianBlur",
+    "feImage",
+    "feMerge",
+    "feMergeNode",
+    "feMorphology",
+    "feOffset",
+    "fePointLight",
+    "feSpecularLighting",
+    "feSpotLight",
+    "feTile",
+    "feTurbulence",
+    "foreignObject",
+    "linearGradient",
+    "radialGradient",
+    "textPath"
+  ]
+}
