@@ -1,5 +1,7 @@
 'use strict'
 
+/* global bootstrap */ // defined by bootstrap 5, sourced by html
+
 const siteAddress = 'https://plex.aleph0.com'
 const apiAddress = `${siteAddress}/chjones/admin/api/index.cgi`
 const debugMode = true
@@ -362,6 +364,8 @@ async function loadMovies () {
     })
 }
 
+// currently used by button in html, which should be changed to dynamic content and
+// event handler in this script
 async function getMovieCalendar () {
   const response = await requestData(
     'radarr',
@@ -432,6 +436,7 @@ async function checkEpisode (seriesId, airDate) {
     })
 }
 
+// Need to change this to a cleaner function ensuring adequate authorization
 async function checkAuth () {
   if (!(await hasAuth())) {
     const warning = document.createElement('div')
