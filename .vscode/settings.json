@@ -16,6 +16,15 @@
 		"radarr",
 		"sonarr"
 	],
+	"cSpell.ignorePaths": [
+		"package-lock.json",
+		"node_modules",
+		"vscode-extension",
+		".git/objects",
+		".vscode",
+		".vscode-insiders"
+	],
+	"cSpell.spellCheckOnlyWorkspaceFiles": true,
 	"javascript.format.semicolons": "remove",
 	"javascript.preferences.quoteStyle": "single",
 	"javascript.format.insertSpaceBeforeFunctionParenthesis": true,
