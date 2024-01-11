@@ -36,7 +36,6 @@
 		".vscode",
 		".vscode-insiders"
 	],
-	"cSpell.spellCheckOnlyWorkspaceFiles": true,
 	"javascript.format.semicolons": "remove",
 	"javascript.preferences.quoteStyle": "single",
 	"javascript.format.insertSpaceBeforeFunctionParenthesis": true,
