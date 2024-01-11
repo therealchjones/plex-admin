@@ -87,9 +87,9 @@ print_debug() {
 }
 
 exit_with_error() {
-	# FD 2 will print to apache error.log (not the cgi.log) but receives no further formatting; we
+	# FD 2 will print to apache errors-other.log (not the cgi.log) but receives no further formatting; we
 	# try to make it look more like other error.log output here
-	echo "[$(date +"%a %b %H:%M:%S.%N %Y")] -/- [cgid:error] [${PPID:-"-"}/-] $0: exit 1: $PROXY_ERROR" >&2
+	echo "[$(date +"%a %b %d %H:%M:%S.%N %Y")] -/- [cgid:error] [${PPID:-"-"}/-] $0: exit 1: $PROXY_ERROR" >&2
 	exit 1
 }
 # process the query string

@@ -271,7 +271,7 @@ async function processResponse (response) {
   if (!json.response) {
     console.error('No error but no response from server.')
     console.error('Response object: ' + json)
-    throw new Error('Invalid response from; see console for more info.')
+    throw new Error('Invalid response from server; see console for more info.')
   }
   return { json, response, time: Date.now() }
 }
