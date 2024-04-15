@@ -10,6 +10,10 @@ main {
 	bottom: 5em;
 }
 
+h2 {
+	margin-top: 0.5rem;
+}
+
 #footer-bar {
 	height: 5rem;
 }
@@ -38,13 +42,4 @@ main {
 	height: 0.5rem;
 	width: 0.5rem;
 	margin-bottom: 0.25rem;
-}
-
-#individual-apps {
-	text-align: center;
-}
-
-#individual-apps li {
-	font-size: 1rem;
-	vertical-align: middle;
 }

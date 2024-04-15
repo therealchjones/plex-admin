@@ -25,8 +25,8 @@ Promise.all([loadDynamicContent, hasAuth()]).then(
   ([dynamicContent, loggedIn]) => {
     if (debugMode) console.debug('displaying dynamic content')
     const loadingContent = document.getElementById('loading-content')
-    loadingContent.classList.remove('d-flex')
     loadingContent.classList.add('d-none')
+    loadingContent.classList.remove('d-flex')
     dynamicContent.classList.remove('d-none')
     return setLogin(loggedIn)
   }
