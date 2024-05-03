@@ -40,8 +40,9 @@ main {
 	margin-bottom: 0.25rem;
 }
 
-#individual-apps {
+.tab-pane>div {
 	text-align: center;
+	padding-bottom: 2ex;
 }
 
 #individual-apps li {
