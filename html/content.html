@@ -40,11 +40,11 @@
 					</div>
 					<div id="quick-actions" class="container text-center justify-content-center requires-logged-in">
 						<h2>Quick Actions</h2>
-						<ul id="common-activities" class="container list-group-flush">
-							<li class="list-group-item list-group-item-action"><button type="button"
-									class="btn btn-primary" data-bs-toggle="modal"
+						<ul id="common-activities" class="container-fluid list-group px-0">
+							<li class="list-group-item list-group-item-action d-flex justify-content-center">
+								<a role="button" class="stretched-link text-decoration-none" data-bs-toggle="modal"
 									data-bs-target="#add-using-plex-modal">Add a movie or
-									show</button>
+									show</a>
 							</li>
 						</ul>
 					</div>
@@ -168,10 +168,10 @@
 							</li>
 						</ul>
 					</div>
-					<div id="individual-apps">
+					<div id="individual-apps" class="text-center">
 						<h2>Individual Apps</h2>
 						<p>Each of these will open in a new window or tab.</p>
-						<ul class="list-group p-0">
+						<ul class="list-group">
 							<li class="list-group-item justify-content-center list-group-item-action d-flex">
 								<a class="stretched-link text-decoration-none"
 									href="http://server1359.seedhost.eu:32400/web/index.html#!/" target="_blank">
@@ -467,7 +467,6 @@
 					<div class="modal-content">
 						<div class="modal-header">
 							<h2 class="modal-title">Add a show or movie</h2>
-							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 						</div>
 						<div class="modal-body">
 							<p>To add a new movie or show, open Plex, search
