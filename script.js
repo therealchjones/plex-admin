@@ -1,6 +1,6 @@
 'use strict'
 
-/* global bootstrap */ // defined by bootstrap 5, sourced by html
+/* global bootstrap */ // defined by bootstrap 5, sourced by html; here for esilint
 
 const siteAddress = 'https://plex.aleph0.com'
 const apiAddress = `${siteAddress}/chjones/admin/api/index.cgi`
@@ -103,6 +103,8 @@ async function addDynamicContent (content) {
   const dynamicContent = content.getElementById('tab-content')
   dynamicContent.classList.add('d-none')
   document.getElementsByTagName('main')[0].appendChild(dynamicContent)
+  const footerButtons = content.getElementById('footer-bar')
+  document.getElementsByTagName('footer')[0].appendChild(footerButtons)
   await enableNavbar()
   return dynamicContent
 }
