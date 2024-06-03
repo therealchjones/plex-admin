@@ -1,6 +1,10 @@
 'use strict'
 
-/* global bootstrap */ // defined by bootstrap 5, sourced by html; here for esilint
+/* global bootstrap */ // defined by bootstrap 5, sourced by index.html; here for esilint
+/* global hasCss */ // defined in index.html; here for eslint
+
+// Don't bother running or loading the rest if CSS is disabled
+if (!hasCss()) throw new Error('CSS not available')
 
 const siteAddress = 'https://plex.aleph0.com'
 const apiAddress = `${siteAddress}/chjones/admin/api/index.cgi`
