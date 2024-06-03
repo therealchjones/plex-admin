@@ -30,7 +30,22 @@
 					use a browser with JavaScript available and enabled to access APS
 					Admin.
 				</p>
+				<p>[Error: noscript block displayed]</p>
 			</noscript>
+			<div id="no-css" class="d-none alert-danger container">
+				<h2>CSS is required</h2>
+				<p>
+					Either your browser does not properly support Cascading Style Sheets
+					and their interface with JavaScript or their use is disabled. APS
+					Admin makes extensive use of CSS for both formatting and behavior.
+					Please use a browser with CSS available and enabled to access APS
+					Admin.
+				</p>
+				<p id="error-css-not-hidden" class="d-none">
+					[Error: Block with CSS display:none displayed]
+				</p>
+				<p id="error-js-no-cssdom"></p>
+			</div>
 			<div id="loading-content" class="container-fluid d-flex justify-content-center align-items-center h-75">
 				<span id="loading-spinner" class="spinner-grow d-none"></span>
 			</div>
@@ -38,14 +53,35 @@
 		<footer>
 			<nav id="footer-bar"
 				class="navbar navbar-expand fixed-bottom navbar-dark bg-dark justify-content-center py-0"
-				role="navigation">
-			</nav>
+				role="navigation"></nav>
 		</footer>
 	</body>
 	<script>
-		// locally done to make non-javascript but CSS browsers look better without
-		// any other dependencies
-		document.getElementById("loading-spinner").classList.remove("d-none")
+		// script to check for JS & CSS is here to allow spinner to start
+		// before downloading external script
+		function hasCss () {
+			if (
+				CSS == null ||
+				CSS.supports == null ||
+				CSS.supports("display:none") == false ||
+				window == null ||
+				window.getComputedStyle == null ||
+				document == null ||
+				document.getElementById == null ||
+				document.getElementById("no-css") == null ||
+				window.getComputedStyle(document.getElementById("no-css")).display !=
+				"none"
+			)
+				return false
+			else return true
+		}
+		if (!hasCss()) {
+			document.getElementById("error-js-no-cssdom").innerHTML =
+				"[Error: CSS or CSSOM not supported]"
+			document.getElementById("no-css").classList.remove("d-none")
+		} else {
+			document.getElementById("loading-spinner").classList.remove("d-none")
+		}
 	</script>
 
 </html>
