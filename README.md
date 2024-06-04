@@ -2,10 +2,18 @@
 
 A system to manage a media center ecosystem
 
+## Capabilities
+
+- When was the most recent episode, and do we have it?
+- When is the next episode?
+
 ## Requirements
 
-- UNIX-like shell environment with /bin/sh and common utilities
-- Working web server that allows CGI access and authentication/authorization
+Working web server that allows:
+
+- CGI access
+- authentication and authorization (strongly recommended)
+- SSH access to a UNIX-like shell environment with `/bin/sh` and common utilities
 
 ## Installation
 
@@ -29,18 +37,14 @@ A system to manage a media center ecosystem
    deploy_local.sh
 4. Edit variables in admin-secrets_local.sh and deploy_local.sh as needed
 5. Run deploy_local.sh to move files to the appropriate directories
-6. Edit source files in the `plex-admin/` directory hierarchy from step 1
-7. Repeat steps 5-6 as desired
-8. Submit pull request as desired
-
-## Capabilities
-
-- When was the most recent episode, and do we have it?
-- When is the next episode?
+6. Checkout appropriate node_modules and VS Code extensions
+7. Edit source files in the `plex-admin/` directory hierarchy from step 1
+8. Repeat steps 5-6 as desired
+9. Submit pull request as desired
 
 ## Development Notes
 
-- Comments are important and plentiful. Read them.
+- Comments are important and plentiful. Read them. Write more.
 - If testing on a local machine while the API proxy is on a remote server and requires authentication,
   you may need to allow "third-party cookies" in your browser to access the scripts (in addition to properly setting up the remote server)
 
