@@ -1,1 +1,3 @@
-admin-secrets_local.sh
+/admin-secrets_local.sh
+/deploy_local.sh
+/node_modules/
