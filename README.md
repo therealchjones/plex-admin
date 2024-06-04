@@ -38,19 +38,6 @@ A system to manage a media center ecosystem
 - When was the most recent episode, and do we have it?
 - When is the next episode?
 
-## To Do
-
-- Recent and upcoming airings of all shows (calendar style)
-- movie release dates
-- delete (from all apps)
-- mark as bad/failed, cancel, retry, search?
-- download status
-- (advanced) confirm shows/movies in multiple apps cross-referenced
-- (advanced?) child management of plex
-- add show or movie
-- (advanced) other in-app management stuff
-- Why hasn't the episode downloaded?
-
 ## Development Notes
 
 - Comments are important and plentiful. Read them.
