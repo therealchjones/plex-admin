@@ -6,9 +6,9 @@
 // Don't bother running or loading the rest if CSS is disabled
 if (!hasCss()) throw new Error('CSS not available')
 
-const siteAddress = 'https://plex.aleph0.com'
-const apiAddress = `${siteAddress}/chjones/admin/api/index.cgi`
 const debugMode = true
+
+const apiAddress = 'https://plex.aleph0.com/api/index.cgi'
 const dbs = {
   downloads: null,
   movies: null,
