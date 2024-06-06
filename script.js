@@ -108,7 +108,7 @@ async function addDynamicContent (content) {
   dynamicContent.classList.add('d-none')
   document.getElementsByTagName('main')[0].appendChild(dynamicContent)
   const footerButtons = content.getElementById('footer-bar')
-  document.getElementsByTagName('footer')[0].appendChild(footerButtons)
+  document.getElementById('footer-bar').replaceWith(footerButtons)
   await enableNavbar()
   return dynamicContent
 }
