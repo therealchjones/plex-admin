@@ -1,3 +1,4 @@
 /admin-secrets_local.sh
 /deploy_local.sh
 /node_modules/
+/package-lock.json
