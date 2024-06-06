@@ -13,20 +13,27 @@ Working web server that allows:
 
 - CGI access
 - authentication and authorization (strongly recommended)
-- SSH access to a UNIX-like shell environment with `/bin/sh` and common utilities
+- SSH access to a UNIX-like shell environment with `/bin/sh` and common
+  utilities
+
+NB: Web server configuration is complex and not described in this project.
+However, information regarding recommended settings that may be applicable is
+included in the related
+[seedhost-apache](https://github.com/therealchjones/seedhost-apache) repository.
 
 ## Installation
 
 1. `git clone https://github.com/therealchjones/plex-admin` into a temporary
    directory of your choice
 2. Enable the web server authorization and authentication method of your choice
-3. Protect api/index.cgi via authentication and/or authorization
+3. Protect the path api/index.cgi via authentication and/or authorization on the
+   server
 4. Configure the web server to run api/index.cgi as a CGI script rather than to
    serve the file contents
 5. Choose a directory _not_ accessible to any web server visitors but accessible
    to api/index.cgi that will house admin-secrets.sh
 6. Edit variables in admin-secrets.sh and deploy.sh as needed
-7. Run deploy.sh to move files to the appropriate directories
+7. Run deploy.sh to move files to the server
 
 ## Development
 
@@ -36,17 +43,18 @@ Working web server that allows:
 3. Copy admin-secrets.sh to admin-secrets_local.sh and deploy.sh to
    deploy_local.sh
 4. Edit variables in admin-secrets_local.sh and deploy_local.sh as needed
-5. Run deploy_local.sh to move files to the appropriate directories
-6. Checkout appropriate node_modules and VS Code extensions
-7. Edit source files in the `plex-admin/` directory hierarchy from step 1
+5. Run deploy_local.sh to move files to the server
+6. Add appropriate Node.js modules (`npm install`) and VS Code extensions as desired
+7. Edit source files in the `plex-admin/` directory hierarchy as desired
 8. Repeat steps 5-6 as desired
 9. Submit pull request as desired
 
 ## Development Notes
 
 - Comments are important and plentiful. Read them. Write more.
-- If testing on a local machine while the API proxy is on a remote server and requires authentication,
-  you may need to allow "third-party cookies" in your browser to access the scripts (in addition to properly setting up the remote server)
+- Neither Node.js/npm nor Visual Studio Code and its recommended extensions are
+  required for development. However, using them can improve code quality and
+  style standardization for this project. Configuration files are included.
 
 ## Copyright
 
